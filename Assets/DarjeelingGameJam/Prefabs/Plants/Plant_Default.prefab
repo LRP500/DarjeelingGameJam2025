@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Plant_Default
       objectReference: {fileID: 0}
+    - target: {fileID: 7676749571513180287, guid: b97d107a8c4ee43ada69719e7ac02dac, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.95
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

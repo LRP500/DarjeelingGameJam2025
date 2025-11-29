@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 319346489}
   - component: {fileID: 319346488}
   - component: {fileID: 319346491}
+  - component: {fileID: 319346492}
   m_Layer: 0
   m_Name: Composition 1_00000
   m_TagString: Untagged
@@ -245,10 +246,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 176790b136f8cf442b936233b929c0ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoopEndOfClip
-  animator: {fileID: 319346488}
-  clip: {fileID: 7400000, guid: 642ebd13e5ffa1845901ce6112cda4b0, type: 2}
-  stateName: Fleur
-  loopLastFrames: 0
+  loopLastFrames: 3
+  windActive: 0
+  windFrameStep: 2
+--- !u!114 &319346492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 319346487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da56f17122e8d6d40acd758a7ed2aa1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrowAnimationReceiver
+  onEndGrow:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &238027639614324877
 Transform:
   m_ObjectHideFlags: 0

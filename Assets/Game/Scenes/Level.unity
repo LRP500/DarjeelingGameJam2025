@@ -119,11 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &508368687 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1434475061655937169, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
-  m_PrefabInstance: {fileID: 1414739736131858388}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &745667391772815454
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -238,6 +233,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
+--- !u!4 &1414739736131858391 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3238045785515992884, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
+  m_PrefabInstance: {fileID: 1414739736131858388}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3025699986872831898
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -246,14 +246,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 477696616657159679, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
+      propertyPath: Target.TrackingTarget
+      value: 
+      objectReference: {fileID: 1414739736131858391}
     - target: {fileID: 2363578262702923325, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
       propertyPath: m_Name
       value: CameraRig
       objectReference: {fileID: 0}
-    - target: {fileID: 4620973595724685493, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
-      propertyPath: Targets.Array.data[0].Object
-      value: 
-      objectReference: {fileID: 508368687}
     - target: {fileID: 8760027851769943836, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

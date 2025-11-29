@@ -1,5 +1,8 @@
-using Unity.Cinemachine;
+using System;
+using R3;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace DarjeelingGameJam.Spores
 {
@@ -9,16 +12,39 @@ namespace DarjeelingGameJam.Spores
         [SerializeField]
         private Spore _spore;
 
+        [MinValue(0)]
         [SerializeField]
-        private float _range = 1f;
+        private float _interval;
 
-        [Vector2AsRange]
-        [SerializeField]
-        private Vector2 _interval;
+        private SphereCollider _collider;
+        private IDisposable _disposable;
+
+        private void Awake()
+        {
+            _collider = GetComponent<SphereCollider>();
+        }
+
+        private void OnEnable()
+        {
+            _disposable = Observable
+                .Interval(TimeSpan.FromSeconds(_interval))
+                .Subscribe(_ => Generate());
+        }
+
+        private void OnDisable()
+        {
+            _disposable?.Dispose();
+        }
 
         private void Generate()
         {
-            
+            var offset = Random.insideUnitCircle * _collider.radius;
+
+            var position = new Vector3(
+                transform.position.x + offset.x,
+                transform.position.y + offset.y);
+
+            Instantiate(_spore, position, Quaternion.identity, transform);
         }
     }
 }

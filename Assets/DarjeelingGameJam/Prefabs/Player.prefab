@@ -227,3 +227,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Wind.WindTracer
   _windEffect: {fileID: 734088030629848955, guid: 3e8f90822a4f61e4b9a0c5ec88dc1c31, type: 3}
   _scale: {x: 2, y: 1.5, z: 2}
+  _effectWidth: 4

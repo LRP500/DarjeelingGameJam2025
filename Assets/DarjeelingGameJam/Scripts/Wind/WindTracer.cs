@@ -13,6 +13,9 @@ namespace DarjeelingGameJam.Wind
 
         [SerializeField]
         private Vector3 _scale = Vector3.one;
+
+        [SerializeField]
+        private float _effectWidth;
         
         private Camera _camera;
         private bool _tracing;
@@ -43,6 +46,13 @@ namespace DarjeelingGameJam.Wind
 
         private void ProcessWindTrace(Vector2 start, Vector2 end)
         {
+            var effect = SpawnWindEffect(start, end);
+            CreateLineCollider(effect, start, end);
+            Destroy(effect, 1f);
+        }
+
+        private Transform SpawnWindEffect(Vector2 start, Vector2 end)
+        {
             var direction = (end - start).normalized;
             var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             var windEffect = Instantiate(_windEffect, start, Quaternion.Euler(0, 0, angle));
@@ -52,9 +62,24 @@ namespace DarjeelingGameJam.Wind
             windEffect.SetFloat(Rng, Random.value > 0.5f ? 0 : 1);
             windEffect.SetTrigger(Launch);
             
-            Destroy(windEffect.gameObject, 1f);
+            return windEffect.transform;
         }
 
+        private void CreateLineCollider(Transform effect, Vector2 start, Vector2 end)
+        {
+            var obj = new GameObject("LineCollider2D");
+            obj.transform.SetParent(effect);
+            obj.transform.position = (start + end) / 2f;
+            obj.transform.localRotation = Quaternion.identity;
+
+            var direction = end - start;
+            var length = direction.magnitude;
+
+            var effectCollider = obj.AddComponent<BoxCollider2D>();
+            effectCollider.size = new Vector2(length, _effectWidth);
+            effectCollider.offset = Vector2.zero;
+        }
+        
         private Vector3 GetMousePosition()
         {
             return _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());

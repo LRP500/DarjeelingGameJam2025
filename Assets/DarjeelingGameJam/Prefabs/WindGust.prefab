@@ -47,10 +47,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Wind.WindGust
   _animator: {fileID: 6513401152667661620}
-  _collider: {fileID: 6376003884403045687}
+  _forceTrigger: {fileID: 2162536877646357720}
   _scale: {x: 2, y: 1.5, z: 2}
   _effectWidth: 4
-  _windForce: 4
 --- !u!1 &4719513081528567956
 GameObject:
   m_ObjectHideFlags: 0
@@ -61,6 +60,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5041728376903657623}
   - component: {fileID: 6376003884403045687}
+  - component: {fileID: 2162536877646357720}
   m_Layer: 0
   m_Name: WindCollider
   m_TagString: Untagged
@@ -129,6 +129,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &2162536877646357720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4719513081528567956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c8b81b5cb0b4a2e8e7e2d4bbd307bda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Wind.WindForceTrigger
+  _windForce: 0.5
 --- !u!1001 &5788320666351489615
 PrefabInstance:
   m_ObjectHideFlags: 0

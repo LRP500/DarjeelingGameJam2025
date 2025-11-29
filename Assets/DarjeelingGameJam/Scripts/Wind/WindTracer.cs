@@ -9,7 +9,6 @@ namespace DarjeelingGameJam.Wind
         private WindGust _windEffect;
         
         private Camera _camera;
-        private bool _tracing;
         private Vector2 _start;
         private Vector2 _end;
         

@@ -12,7 +12,7 @@ namespace DarjeelingGameJam.Wind
         private Animator _animator;
         
         [SerializeField]
-        private BoxCollider2D _collider;
+        private WindForceTrigger _forceTrigger;
         
         [SerializeField]
         private Vector3 _scale = Vector3.one;
@@ -21,21 +21,18 @@ namespace DarjeelingGameJam.Wind
         [SerializeField]
         private float _effectWidth = 4f;
 
-        [MinValue(0.1)]
-        [SerializeField]
-        private float _windForce = 1f;
-        
         public void Initialize(Vector3 direction)
         {
             _animator.transform.localScale = _scale;
 
-            var position = _collider.transform.localPosition;
+            var position = _forceTrigger.transform.localPosition;
             position.x += direction.magnitude / 2;
             position.y = 0f;
             
-            _collider.transform.localPosition = position;
-            _collider.size = new Vector2(direction.magnitude, _effectWidth);
-            _collider.offset = Vector2.zero;
+            _forceTrigger.Initialize(direction);
+            _forceTrigger.transform.localPosition = position;
+            _forceTrigger.Collider.size = new Vector2(direction.magnitude, _effectWidth);
+            _forceTrigger.Collider.offset = Vector2.zero;
             
             _animator.SetFloat(Rng, Random.value > 0.5f ? 0 : 1);
             _animator.SetTrigger(Launch);

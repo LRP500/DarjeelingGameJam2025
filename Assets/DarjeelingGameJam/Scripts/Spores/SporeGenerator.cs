@@ -16,6 +16,9 @@ namespace DarjeelingGameJam.Spores
         [SerializeField]
         private float _interval;
 
+        [SerializeField]
+        private bool _simulateOnSpawn;
+        
         private SphereCollider _collider;
         private IDisposable _disposable;
 
@@ -44,7 +47,12 @@ namespace DarjeelingGameJam.Spores
                 transform.position.x + offset.x,
                 transform.position.y + offset.y);
 
-            Instantiate(_spore, position, Quaternion.identity, transform);
+            var spore = Instantiate(_spore, position, Quaternion.identity, transform);
+
+            if (_simulateOnSpawn)
+            {
+                spore.Detach();
+            }
         }
     }
 }

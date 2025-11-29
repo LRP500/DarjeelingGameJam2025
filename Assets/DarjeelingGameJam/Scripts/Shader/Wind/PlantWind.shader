@@ -4,17 +4,14 @@ Shader "Universal Render Pipeline/2D/PlantWind"
     {
         _MainTex ("Sprite Texture", 2D) = "white" {}
 
-        // Legacy properties (pour compatibilité avec le shader sprite legacy)
         [HideInInspector] _Color ("Tint", Color) = (1,1,1,1)
         [HideInInspector] PixelSnap ("Pixel snap", Float) = 0
         [HideInInspector] _RendererColor ("RendererColor", Color) = (1,1,1,1)
         [HideInInspector] _AlphaTex ("External Alpha", 2D) = "white" {}
         [HideInInspector] _EnableExternalAlpha ("Enable External Alpha", Float) = 0
 
-        // --- Toggle vent ---
         [Toggle] _EnableWind ("Enable Wind", Float) = 1
 
-        // --- Paramètres de vent ---
         _WindDirection ("Wind Direction (XY)", Vector) = (1, 0, 0, 0)
         _BaseWindStrength ("Base Wind Strength", Float) = 0.02
         _GustStrength ("Gust Extra Strength", Float) = 0.08
@@ -25,8 +22,7 @@ Shader "Universal Render Pipeline/2D/PlantWind"
         _WindTimeScale ("Wind Time Scale", Float) = 1.0
         _RandomSeed ("Random Seed", Float) = 1.0
 
-        // --- Chroma key (suppression de couleur) ---
-        _KeyColor     ("Key Color", Color) = (1,1,1,1)              // blanc
+        _KeyColor     ("Key Color", Color) = (1,1,1,1)
         _KeyTolerance ("Key Tolerance", Range(0,1)) = 0.1
         _KeyFeather   ("Key Feather", Range(0,1))   = 0.1
     }
@@ -45,7 +41,7 @@ Shader "Universal Render Pipeline/2D/PlantWind"
         ZWrite Off
 
         // ============================
-        // Pass 1 : Universal2D (Renderer 2D)
+        // Pass 1 : Universal2D
         // ============================
         Pass
         {
@@ -64,7 +60,6 @@ Shader "Universal Render Pipeline/2D/PlantWind"
             #pragma vertex UnlitVertex
             #pragma fragment UnlitFragment
 
-            // GPU Instancing
             #pragma multi_compile_instancing
             #pragma multi_compile _ DEBUG_DISPLAY SKINNED_SPRITE
 
@@ -114,7 +109,8 @@ Shader "Universal Render Pipeline/2D/PlantWind"
 
             float Hash11(float n)
             {
-                return frac(sin(n * 17.0 + _RandomSeed * 0.1) * 43758.5453123);
+                // seed plus influent
+                return frac(sin(n * 17.0 + _RandomSeed * 12.9898) * 43758.5453123);
             }
 
             float ComputeGustAmplitude(float t)
@@ -145,24 +141,29 @@ Shader "Universal Render Pipeline/2D/PlantWind"
 
                 SetUpSpriteInstanceProperties();
 
-                // ---------- VENT (optionnel) ----------
-                if (_EnableWind > 0.5)
+                // ---------- VENT ----------
+                float windBlend = saturate(_EnableWind);
+
+                if (windBlend > 0.0001)
                 {
                     float height01 = saturate(v.uv.y);
                     float2 windDir = normalize(_WindDirection.xy + float2(1e-5, 0.0));
-                    float t = _Time.y * _WindTimeScale;
+
+                    // temps décalé par seed
+                    float t = (_Time.y + _RandomSeed * 13.37) * _WindTimeScale;
                     float gustAmp = ComputeGustAmplitude(t);
 
                     float noise = sin(t * 2.0
                                       + v.positionOS.x * _WindNoiseScale
-                                      + v.positionOS.y * (_WindNoiseScale * 0.37));
+                                      + v.positionOS.y * (_WindNoiseScale * 0.37)
+                                      + _RandomSeed * 5.123);
 
                     float bend = height01 * _BendByHeight;
-                    float sway = gustAmp * noise * bend;
+                    float sway = gustAmp * noise * bend * windBlend;
 
                     v.positionOS.xy += windDir * sway;
                 }
-                // --------------------------------------
+                // -------------------------
 
                 v.positionOS = UnityFlipSprite(v.positionOS, unity_SpriteProps.xy);
                 o.positionCS = TransformObjectToHClip(v.positionOS);
@@ -178,7 +179,6 @@ Shader "Universal Render Pipeline/2D/PlantWind"
             {
                 float4 col = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
 
-                // === Chroma key sur la couleur clé ===
                 float3 diff = col.rgb - _KeyColor.rgb;
                 float dist = length(diff);
 
@@ -277,7 +277,7 @@ Shader "Universal Render Pipeline/2D/PlantWind"
 
             float Hash11(float n)
             {
-                return frac(sin(n * 17.0 + _RandomSeed * 0.1) * 43758.5453123);
+                return frac(sin(n * 17.0 + _RandomSeed * 12.9898) * 43758.5453123);
             }
 
             float ComputeGustAmplitude(float t)
@@ -308,19 +308,23 @@ Shader "Universal Render Pipeline/2D/PlantWind"
 
                 SetUpSpriteInstanceProperties();
 
-                if (_EnableWind > 0.5)
+                float windBlend = saturate(_EnableWind);
+
+                if (windBlend > 0.0001)
                 {
                     float height01 = saturate(v.uv.y);
                     float2 windDir = normalize(_WindDirection.xy + float2(1e-5, 0.0));
-                    float t = _Time.y * _WindTimeScale;
+
+                    float t = (_Time.y + _RandomSeed * 13.37) * _WindTimeScale;
                     float gustAmp = ComputeGustAmplitude(t);
 
                     float noise = sin(t * 2.0
                                       + v.positionOS.x * _WindNoiseScale
-                                      + v.positionOS.y * (_WindNoiseScale * 0.37));
+                                      + v.positionOS.y * (_WindNoiseScale * 0.37)
+                                      + _RandomSeed * 5.123);
 
                     float bend = height01 * _BendByHeight;
-                    float sway = gustAmp * noise * bend;
+                    float sway = gustAmp * noise * bend * windBlend;
 
                     v.positionOS.xy += windDir * sway;
                 }

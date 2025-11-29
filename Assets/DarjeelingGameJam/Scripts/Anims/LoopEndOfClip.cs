@@ -14,6 +14,9 @@ public class LoopEndOfClip : MonoBehaviour
     [Tooltip("Facteur de saut de frames en vent (2 = une frame sur deux)")]
     public int windFrameStep = 2;
 
+    [Tooltip("Vitesse de transition du vent (ON/OFF)")]
+    public float windBlendSpeed = 5f;
+
     private Animator _animator;
     private AnimationClip _clip;
 
@@ -39,6 +42,9 @@ public class LoopEndOfClip : MonoBehaviour
     private static readonly int EnableWindID = Shader.PropertyToID("_EnableWind");
 
     private int _previousLoopLastFrames;
+
+    // Valeur blendée envoyée au shader (0..1)
+    private float _enableWindCurrent = 0f;
 
     private void Awake()
     {
@@ -95,6 +101,7 @@ public class LoopEndOfClip : MonoBehaviour
             _animator.speed = 1f;
         }
 
+        _enableWindCurrent = windActive ? 1f : 0f;
         ApplyWindToMaterial();
     }
 
@@ -109,6 +116,14 @@ public class LoopEndOfClip : MonoBehaviour
             _previousLoopLastFrames = loopLastFrames;
             RecalculateLoopConfig(true);
         }
+
+        // Transition smooth du vent (bool -> float 0..1)
+        float target = windActive ? 1f : 0f;
+        _enableWindCurrent = Mathf.MoveTowards(
+            _enableWindCurrent,
+            target,
+            windBlendSpeed * Time.deltaTime
+        );
 
         ApplyWindToMaterial();
 
@@ -155,7 +170,7 @@ public class LoopEndOfClip : MonoBehaviour
         if (_plantMaterial == null)
             return;
 
-        _plantMaterial.SetFloat(EnableWindID, windActive ? 1f : 0f);
+        _plantMaterial.SetFloat(EnableWindID, _enableWindCurrent);
     }
 
     private void CheckGrowthFinishedAndEnterLoop()

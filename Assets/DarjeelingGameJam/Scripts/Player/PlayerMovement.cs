@@ -12,7 +12,6 @@ namespace DarjeelingGameJam.Player
         private float _speed;
         
         private PlayerInput _playerInput;
-        private Vector2 _moveInput;
 
         private Camera _camera;
 
@@ -20,20 +19,15 @@ namespace DarjeelingGameJam.Player
         {
             _playerInput = GetComponent<PlayerInput>();
             _playerInput.actions.Enable();
-
             _camera = Camera.main;
-
-        }
-
-        public void OnMove(InputValue value)
-        {
-            _moveInput = value.Get<Vector2>();
         }
 
         private void Update()
         {
-
-            gameObject.transform.position = _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            var mousePosition = Mouse.current.position.ReadValue();
+            var worldPosition = _camera.ScreenToWorldPoint(mousePosition);
+            worldPosition.z = _camera.nearClipPlane;
+            transform.position = worldPosition;
         }
     }
 }

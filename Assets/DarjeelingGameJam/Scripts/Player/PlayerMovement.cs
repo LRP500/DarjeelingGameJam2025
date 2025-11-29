@@ -14,10 +14,15 @@ namespace DarjeelingGameJam.Player
         private PlayerInput _playerInput;
         private Vector2 _moveInput;
 
+        private Camera _camera;
+
         private void Awake()
         {
             _playerInput = GetComponent<PlayerInput>();
             _playerInput.actions.Enable();
+
+            _camera = Camera.main;
+
         }
 
         public void OnMove(InputValue value)
@@ -27,9 +32,8 @@ namespace DarjeelingGameJam.Player
 
         private void Update()
         {
-            var direction = new Vector3(_moveInput.x, _moveInput.y);
-            var movement = direction * _speed * Time.deltaTime;
-            gameObject.transform.position += movement;
+
+            gameObject.transform.position = _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         }
     }
 }

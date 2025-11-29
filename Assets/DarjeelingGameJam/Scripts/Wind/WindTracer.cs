@@ -1,23 +1,27 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace DarjeelingGameJam.Wind
 {
-    [RequireComponent(typeof(LineRenderer))]
     public class WindTracer : MonoBehaviour
     {
+        private static readonly int Launch = Animator.StringToHash("Launch");
+        private static readonly int Rng = Animator.StringToHash("rng");
+
+        [SerializeField]
+        private Animator _windEffect;
+
+        [SerializeField]
+        private Vector3 _scale = Vector3.one;
+        
         private Camera _camera;
         private bool _tracing;
         private Vector2 _start;
         private Vector2 _end;
         
-        private LineRenderer _line;
-
         private void Awake()
         {
             _camera = Camera.main;
-            _line = GetComponent<LineRenderer>();
         }
 
         private void OnInteract(InputValue value)
@@ -39,9 +43,16 @@ namespace DarjeelingGameJam.Wind
 
         private void ProcessWindTrace(Vector2 start, Vector2 end)
         {
-            _line.positionCount = 2;
-            _line.SetPosition(0, start);
-            _line.SetPosition(1, end);
+            var direction = (end - start).normalized;
+            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            var windEffect = Instantiate(_windEffect, start, Quaternion.Euler(0, 0, angle));
+
+            windEffect.transform.localScale = _scale;
+
+            windEffect.SetFloat(Rng, Random.value > 0.5f ? 0 : 1);
+            windEffect.SetTrigger(Launch);
+            
+            Destroy(windEffect.gameObject, 1f);
         }
 
         private Vector3 GetMousePosition()

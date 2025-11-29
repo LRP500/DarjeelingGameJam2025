@@ -132,6 +132,7 @@ MonoBehaviour:
   loopLastFrames: 3
   windActive: 0
   windFrameStep: 2
+  windBlendSpeed: 1
 --- !u!114 &4359161876978619634
 MonoBehaviour:
   m_ObjectHideFlags: 0

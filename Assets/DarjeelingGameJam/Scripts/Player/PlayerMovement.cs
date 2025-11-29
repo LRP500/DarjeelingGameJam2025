@@ -2,7 +2,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Game.Scripts.Player
+namespace DarjeelingGameJam.Player
 {
     [RequireComponent(typeof(PlayerInput))]
     public class PlayerMovement : MonoBehaviour

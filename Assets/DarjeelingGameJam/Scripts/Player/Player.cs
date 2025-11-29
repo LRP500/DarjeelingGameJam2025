@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Scripts.Player
+namespace DarjeelingGameJam.Player
 {
     public class Player : MonoBehaviour
     {

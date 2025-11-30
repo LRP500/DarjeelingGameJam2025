@@ -20,8 +20,9 @@ namespace DarjeelingGameJam.Animals.Abilities
         
         protected override void Move(Vector3 position)
         {
-            if (transform.position.AlmostEqualXY(position, _stoppingDistance))
+            if (transform.position.AlmostEqual(position, _stoppingDistance))
             {
+                Rigidbody.linearVelocity = Vector3.zero;
                 return;
             }
 

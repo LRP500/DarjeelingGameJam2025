@@ -60,6 +60,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   _speed: 10
+  _horizontalLimits: {x: -45, y: 45}
+  _verticalLimits: {x: -2, y: 2}
 --- !u!114 &539876552967313040
 MonoBehaviour:
   m_ObjectHideFlags: 0

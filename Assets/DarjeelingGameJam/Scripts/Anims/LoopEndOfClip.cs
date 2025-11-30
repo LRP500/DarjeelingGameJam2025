@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
 public class LoopEndOfClip : MonoBehaviour
 {
     [Header("Loop de fin")]
@@ -49,34 +48,37 @@ public class LoopEndOfClip : MonoBehaviour
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        if (_animator == null)
+
+        if (_animator != null)
         {
-            Debug.LogError("[LoopEndOfClip] Aucun Animator trouvé sur ce GameObject.");
-            enabled = false;
-            return;
-        }
+            var controller = _animator.runtimeAnimatorController;
+            if (controller != null && controller.animationClips != null && controller.animationClips.Length > 0)
+            {
+                _clip = controller.animationClips[0];
+                _clipLength = _clip.length;
 
-        var controller = _animator.runtimeAnimatorController;
-        if (controller == null || controller.animationClips == null || controller.animationClips.Length == 0)
+                float frameRate = Mathf.Max(_clip.frameRate, 1f);
+                _frameDuration = 1f / frameRate;
+
+                _totalFrames = Mathf.Max(1, Mathf.RoundToInt(_clipLength * frameRate));
+
+                _lastFrameTime = (_totalFrames - 1) * _frameDuration;
+                _lastFrameTime = Mathf.Min(_lastFrameTime, _clipLength);
+
+                _previousLoopLastFrames = loopLastFrames;
+                RecalculateLoopConfig(false);
+            }
+            else
+            {
+                Debug.LogWarning("[LoopEndOfClip] Pas d'AnimationClip trouvé dans le RuntimeAnimatorController. Le comportement de loop d'anim sera désactivé, seul le shader de vent sera piloté.");
+                _animator = null;
+                _clip = null;
+            }
+        }
+        else
         {
-            Debug.LogError("[LoopEndOfClip] Pas d'AnimationClip trouvé dans le RuntimeAnimatorController.");
-            enabled = false;
-            return;
+            Debug.LogWarning("[LoopEndOfClip] Aucun Animator trouvé, seul le shader de vent sera piloté.");
         }
-
-        _clip = controller.animationClips[0];
-        _clipLength = _clip.length;
-
-        float frameRate = Mathf.Max(_clip.frameRate, 1f);
-        _frameDuration = 1f / frameRate;
-
-        _totalFrames = Mathf.Max(1, Mathf.RoundToInt(_clipLength * frameRate));
-
-        _lastFrameTime = (_totalFrames - 1) * _frameDuration;
-        _lastFrameTime = Mathf.Min(_lastFrameTime, _clipLength);
-
-        _previousLoopLastFrames = loopLastFrames;
-        RecalculateLoopConfig(false);
 
         _spriteRenderer = GetComponent<SpriteRenderer>();
         if (_spriteRenderer != null)
@@ -107,6 +109,17 @@ public class LoopEndOfClip : MonoBehaviour
 
     private void Update()
     {
+        // --- Pilotage du vent / shader : toujours actif, même sans Animator / Clip ---
+        float target = windActive ? 1f : 0f;
+        _enableWindCurrent = Mathf.MoveTowards(
+            _enableWindCurrent,
+            target,
+            windBlendSpeed * Time.deltaTime
+        );
+
+        ApplyWindToMaterial();
+        // ---------------------------------------------------------------------------
+
         if (_animator == null || _clip == null)
             return;
 
@@ -116,16 +129,6 @@ public class LoopEndOfClip : MonoBehaviour
             _previousLoopLastFrames = loopLastFrames;
             RecalculateLoopConfig(true);
         }
-
-        // Transition smooth du vent (bool -> float 0..1)
-        float target = windActive ? 1f : 0f;
-        _enableWindCurrent = Mathf.MoveTowards(
-            _enableWindCurrent,
-            target,
-            windBlendSpeed * Time.deltaTime
-        );
-
-        ApplyWindToMaterial();
 
         // Tant que la croissance n'est pas finie, on laisse l'Animator jouer
         if (!_growthFinished)
@@ -155,6 +158,9 @@ public class LoopEndOfClip : MonoBehaviour
 
     private void RecalculateLoopConfig(bool snapToLoopStartIfLooping)
     {
+        if (_clip == null)
+            return;
+
         if (loopLastFrames > 0)
         {
             _loopFramesCount = Mathf.Clamp(loopLastFrames, 1, _totalFrames);
@@ -191,6 +197,9 @@ public class LoopEndOfClip : MonoBehaviour
 
     private void CheckGrowthFinished()
     {
+        if (_animator == null)
+            return;
+
         var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
 
         if (_growthFinished)
@@ -217,6 +226,9 @@ public class LoopEndOfClip : MonoBehaviour
 
     private void EnterLoopPhase()
     {
+        if (_animator == null || _clip == null)
+            return;
+
         _inLoopPhase = true;
         _frameTimer = 0f;
         _currentLoopFrameIndex = 0;
@@ -232,6 +244,9 @@ public class LoopEndOfClip : MonoBehaviour
 
     private void UpdateLoop()
     {
+        if (_animator == null || _clip == null)
+            return;
+
         // Si loopLastFrames <= 0 : même avec vent actif, on reste sur la dernière frame
         if (_loopFramesCount <= 0)
         {

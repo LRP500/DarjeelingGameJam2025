@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9a9dd9782a74eb490048c6a31ee5d85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Plants.Plant
+  _scaleMinMax: {x: 0.4, y: 2}
 --- !u!1001 &4484985510509423476
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -179,8 +180,67 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6507897279012895465, guid: b56cd83ff29b5da4ca015492934a9c08, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1845218191341239987}
   m_SourcePrefab: {fileID: 100100000, guid: b56cd83ff29b5da4ca015492934a9c08, type: 3}
+--- !u!1 &1996921118943570069 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6507897279012895465, guid: b56cd83ff29b5da4ca015492934a9c08, type: 3}
+  m_PrefabInstance: {fileID: 4748710684677640828}
+  m_PrefabAsset: {fileID: 0}
+--- !u!60 &1845218191341239987
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996921118943570069}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 12.8, y: 7.2}
+    newSize: {x: 12.8, y: 7.2}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -4.89964, y: -0.17752957}
+      - {x: -4.709339, y: -1.5949242}
+      - {x: 3.2634299, y: 0.5153413}
+      - {x: 3.6251554, y: 1.2510297}
+  m_UseDelaunayMesh: 0
 --- !u!4 &4059321711839999945 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8769445961866995125, guid: b56cd83ff29b5da4ca015492934a9c08, type: 3}

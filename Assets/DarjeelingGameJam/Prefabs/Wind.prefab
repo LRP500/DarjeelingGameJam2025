@@ -170,8 +170,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8b81b5cb0b4a2e8e7e2d4bbd307bda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Wind.WindForceTrigger
-  _windForce: 0.4
-  _sporeDetachChance: 0.2
+  _windForce: 2
+  _sporeDetachChance: 0.629
   _plantEffectDuration: 1.5
 --- !u!1 &6666605349242222222
 GameObject:

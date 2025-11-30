@@ -104,6 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9a9dd9782a74eb490048c6a31ee5d85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Plants.Plant
+  _scaleMinMax: {x: 0.4, y: 2}
 --- !u!1 &6486969077928280211
 GameObject:
   m_ObjectHideFlags: 0

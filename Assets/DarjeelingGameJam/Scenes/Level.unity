@@ -276,7 +276,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 133582500624619910, guid: 0b83c49d7a4fa46d19378391ff387082, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 162579675736987490, guid: 0b83c49d7a4fa46d19378391ff387082, type: 3}
       propertyPath: m_LocalPosition.z
@@ -764,10 +764,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8445504165567037269, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -824,10 +820,6 @@ PrefabInstance:
     - target: {fileID: 4724593586510718822, guid: 2a500cf067d6e453cad5434200373a32, type: 3}
       propertyPath: m_Name
       value: Animals
-      objectReference: {fileID: 0}
-    - target: {fileID: 9054344463103365369, guid: 2a500cf067d6e453cad5434200373a32, type: 3}
-      propertyPath: _range
-      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

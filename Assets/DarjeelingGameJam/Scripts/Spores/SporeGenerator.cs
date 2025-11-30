@@ -15,12 +15,17 @@ namespace DarjeelingGameJam.Spores
         [MinValue(0)]
         [SerializeField]
         private float _interval;
-
+        
+        [MinValue(0)]
+        [SerializeField]
+        private int _maxCount = 3;
+        
         [SerializeField]
         private bool _simulateOnSpawn;
         
         private SphereCollider _collider;
         private IDisposable _disposable;
+        private int _sporeSpawnedCount;
 
         private void Awake()
         {
@@ -52,6 +57,13 @@ namespace DarjeelingGameJam.Spores
             if (_simulateOnSpawn)
             {
                 spore.Detach();
+            }
+
+            _sporeSpawnedCount++;
+
+            if (_sporeSpawnedCount >= _maxCount)
+            {
+                enabled = false;
             }
         }
     }

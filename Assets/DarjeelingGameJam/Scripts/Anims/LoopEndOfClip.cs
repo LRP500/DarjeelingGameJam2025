@@ -98,7 +98,7 @@ public class LoopEndOfClip : MonoBehaviour
 
         if (_animator != null)
         {
-            _animator.speed = 1f;
+            _animator.speed = 1f; // croissance normale
         }
 
         _enableWindCurrent = windActive ? 1f : 0f;
@@ -127,13 +127,29 @@ public class LoopEndOfClip : MonoBehaviour
 
         ApplyWindToMaterial();
 
-        if (!_inLoopPhase)
+        // Tant que la croissance n'est pas finie, on laisse l'Animator jouer
+        if (!_growthFinished)
         {
-            CheckGrowthFinishedAndEnterLoop();
+            CheckGrowthFinished();
+            return;
+        }
+
+        // À partir d'ici : croissance finie
+        if (windActive)
+        {
+            // On veut looper la fin UNIQUEMENT si le vent est actif
+            if (!_inLoopPhase)
+            {
+                EnterLoopPhase();
+            }
+
+            UpdateLoop();
         }
         else
         {
-            UpdateLoop();
+            // Pas de vent : pas de loop → figer sur la dernière frame
+            _inLoopPhase = false;
+            FreezeOnLastFrame();
         }
     }
 
@@ -173,7 +189,7 @@ public class LoopEndOfClip : MonoBehaviour
         _plantMaterial.SetFloat(EnableWindID, _enableWindCurrent);
     }
 
-    private void CheckGrowthFinishedAndEnterLoop()
+    private void CheckGrowthFinished()
     {
         var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
 
@@ -183,8 +199,20 @@ public class LoopEndOfClip : MonoBehaviour
         if (stateInfo.normalizedTime >= 1f)
         {
             _growthFinished = true;
-            EnterLoopPhase();
+            // On fige sur la dernière frame par défaut (pas de loop tant que pas de vent)
+            FreezeOnLastFrame();
         }
+    }
+
+    private void FreezeOnLastFrame()
+    {
+        if (_animator == null || _clip == null)
+            return;
+
+        _animator.speed = 0f;
+        float normLast = (_clipLength > 0f) ? _lastFrameTime / _clipLength : 1f;
+        _animator.Play(0, 0, normLast);
+        _animator.Update(0f);
     }
 
     private void EnterLoopPhase()
@@ -204,11 +232,10 @@ public class LoopEndOfClip : MonoBehaviour
 
     private void UpdateLoop()
     {
+        // Si loopLastFrames <= 0 : même avec vent actif, on reste sur la dernière frame
         if (_loopFramesCount <= 0)
         {
-            float normLast = (_clipLength > 0f) ? _lastFrameTime / _clipLength : 1f;
-            _animator.Play(0, 0, normLast);
-            _animator.Update(0f);
+            FreezeOnLastFrame();
             return;
         }
 

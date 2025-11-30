@@ -127,9 +127,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 176790b136f8cf442b936233b929c0ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoopEndOfClip
-  loopLastFrames: 1
+  loopLastFrames: 3
   windActive: 0
-  windFrameStep: 2
+  windFrameStep: 0
   windBlendSpeed: 5
 --- !u!114 &611533920045598969
 MonoBehaviour:

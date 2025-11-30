@@ -68,6 +68,7 @@ Material:
     - _PaperTiling: 5
     - _PosterizeSteps: 6
     - _RandomSeed: 1
+    - _TintVariationAmount: 0.3
     - _WindNoiseScale: 1.3
     - _WindSpeed: 4.28
     - _WindStrength: 0.49

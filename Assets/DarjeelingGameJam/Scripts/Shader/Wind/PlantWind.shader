@@ -32,6 +32,9 @@
         // --- Blur DOF léger ---
         _BlurAmount    ("Blur Amount", Range(0,1)) = 0.0
         _BlurMaxRadius ("Blur Max Radius", Float)  = 2.0
+
+        // --- Variation de teinte par objet ---
+        _TintVariationAmount ("Tint Variation Amount", Range(0,0.5)) = 0.5
     }
 
     SubShader
@@ -120,6 +123,8 @@
 
                 float  _BlurAmount;
                 float  _BlurMaxRadius;
+
+                float  _TintVariationAmount;
             CBUFFER_END
 
             // === Shape lights ===
@@ -164,6 +169,57 @@
                 return gustStrength * active * envelope;
             }
 
+            // --- Utils RGB <-> YIQ pour variation de teinte ---
+            float3 RGB2YIQ(float3 c)
+            {
+                float3 yiq;
+                yiq.x = dot(c, float3(0.299,     0.587,      0.114));
+                yiq.y = dot(c, float3(0.595716, -0.274453,  -0.321263));
+                yiq.z = dot(c, float3(0.211456, -0.522591,   0.311135));
+                return yiq;
+            }
+
+            float3 YIQ2RGB(float3 c)
+            {
+                float3 rgb;
+                rgb.r = c.x + 0.9563 * c.y + 0.6210 * c.z;
+                rgb.g = c.x - 0.2721 * c.y - 0.6474 * c.z;
+                rgb.b = c.x - 1.1070 * c.y + 1.7046 * c.z;
+                return rgb;
+            }
+
+            // --- Variation de teinte par objet (amplitude aléatoire 0.._TintVariationAmount) ---
+            float3 ApplyInstanceTint(float3 rgb)
+            {
+                float v = _TintVariationAmount;
+                if (v <= 0.0001)
+                    return rgb;
+
+                float randHue = Hash11(_RandomSeed * 7.77);   // direction de teinte 0..1
+                float randAmp = Hash11(_RandomSeed * 13.37);  // amplitude locale 0..1
+                float localAmount = v * randAmp;              // 0.._TintVariationAmount (ex 0..0.5)
+
+                float maxHueShift = 3.14159;                  // ±180° quand localAmount = 1
+                float angle = (randHue * 2.0 - 1.0) * maxHueShift * localAmount;
+
+                float3 yiq = RGB2YIQ(rgb);
+
+                float I = yiq.y;
+                float Q = yiq.z;
+
+                float cosA = cos(angle);
+                float sinA = sin(angle);
+
+                float I2 = I * cosA - Q * sinA;
+                float Q2 = I * sinA + Q * cosA;
+
+                yiq.y = I2;
+                yiq.z = Q2;
+
+                float3 outRgb = YIQ2RGB(yiq);
+                return saturate(outRgb);
+            }
+
             // --- BLUR helper (3x3) ---
             float4 SampleMainWithBlur(float2 uv)
             {
@@ -173,12 +229,12 @@
                     return SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv);
                 }
 
-                float2 texel = _MainTex_TexelSize.xy;
-                float radius = blurAmount * _BlurMaxRadius;
+                float2 texel  = _MainTex_TexelSize.xy;
+                float  radius = blurAmount * _BlurMaxRadius;
                 float2 offset = texel * radius;
 
                 float4 col = 0;
-                float weightSum = 0;
+                float  weightSum = 0;
 
                 [unroll]
                 for (int x = -1; x <= 1; x++)
@@ -187,7 +243,7 @@
                     for (int y = -1; y <= 1; y++)
                     {
                         float2 uvOff = uv + float2(x, y) * offset;
-                        float w = 1.0;
+                        float  w = 1.0;
                         col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvOff) * w;
                         weightSum += w;
                     }
@@ -242,9 +298,11 @@
 
             half4 CombinedShapeLightFragment(Varyings i) : SV_Target
             {
-                // >>> blur ici <<<
                 half4 main = i.color * SampleMainWithBlur(i.uv);
                 const half4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
+
+                // Variation de teinte par objet
+                main.rgb = ApplyInstanceTint(main.rgb);
 
                 // Chroma key
                 float3 diff = main.rgb - _KeyColor.rgb;
@@ -332,6 +390,8 @@
 
                 float  _BlurAmount;
                 float  _BlurMaxRadius;
+
+                float  _TintVariationAmount;
             CBUFFER_END
 
             float Hash11(float n)
@@ -356,6 +416,55 @@
                 float gustStrength = _BaseWindStrength + randAmp * _GustStrength;
 
                 return gustStrength * active * envelope;
+            }
+
+            float3 RGB2YIQ(float3 c)
+            {
+                float3 yiq;
+                yiq.x = dot(c, float3(0.299,     0.587,      0.114));
+                yiq.y = dot(c, float3(0.595716, -0.274453,  -0.321263));
+                yiq.z = dot(c, float3(0.211456, -0.522591,   0.311135));
+                return yiq;
+            }
+
+            float3 YIQ2RGB(float3 c)
+            {
+                float3 rgb;
+                rgb.r = c.x + 0.9563 * c.y + 0.6210 * c.z;
+                rgb.g = c.x - 0.2721 * c.y - 0.6474 * c.z;
+                rgb.b = c.x - 1.1070 * c.y + 1.7046 * c.z;
+                return rgb;
+            }
+
+            float3 ApplyInstanceTint(float3 rgb)
+            {
+                float v = _TintVariationAmount;
+                if (v <= 0.0001)
+                    return rgb;
+
+                float randHue = Hash11(_RandomSeed * 7.77);
+                float randAmp = Hash11(_RandomSeed * 13.37);
+                float localAmount = v * randAmp;
+
+                float maxHueShift = 3.14159;
+                float angle = (randHue * 2.0 - 1.0) * maxHueShift * localAmount;
+
+                float3 yiq = RGB2YIQ(rgb);
+
+                float I = yiq.y;
+                float Q = yiq.z;
+
+                float cosA = cos(angle);
+                float sinA = sin(angle);
+
+                float I2 = I * cosA - Q * sinA;
+                float Q2 = I * sinA + Q * cosA;
+
+                yiq.y = I2;
+                yiq.z = Q2;
+
+                float3 outRgb = YIQ2RGB(yiq);
+                return saturate(outRgb);
             }
 
             Varyings NormalsRenderingVertex(Attributes attributes)
@@ -404,6 +513,9 @@
             {
                 half4 mainTex = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
                 half3 normalTS = UnpackNormal(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, i.uv));
+
+                // Variation de teinte aussi dans ce pass
+                mainTex.rgb = ApplyInstanceTint(mainTex.rgb);
 
                 // Chroma key sur la map de base
                 float3 diff = mainTex.rgb - _KeyColor.rgb;
@@ -487,6 +599,8 @@
 
                 float  _BlurAmount;
                 float  _BlurMaxRadius;
+
+                float  _TintVariationAmount;
             CBUFFER_END
 
             float Hash11(float n)
@@ -513,6 +627,55 @@
                 return gustStrength * active * envelope;
             }
 
+            float3 RGB2YIQ(float3 c)
+            {
+                float3 yiq;
+                yiq.x = dot(c, float3(0.299,     0.587,      0.114));
+                yiq.y = dot(c, float3(0.595716, -0.274453,  -0.321263));
+                yiq.z = dot(c, float3(0.211456, -0.522591,   0.311135));
+                return yiq;
+            }
+
+            float3 YIQ2RGB(float3 c)
+            {
+                float3 rgb;
+                rgb.r = c.x + 0.9563 * c.y + 0.6210 * c.z;
+                rgb.g = c.x - 0.2721 * c.y - 0.6474 * c.z;
+                rgb.b = c.x - 1.1070 * c.y + 1.7046 * c.z;
+                return rgb;
+            }
+
+            float3 ApplyInstanceTint(float3 rgb)
+            {
+                float v = _TintVariationAmount;
+                if (v <= 0.0001)
+                    return rgb;
+
+                float randHue = Hash11(_RandomSeed * 7.77);
+                float randAmp = Hash11(_RandomSeed * 13.37);
+                float localAmount = v * randAmp;
+
+                float maxHueShift = 3.14159;
+                float angle = (randHue * 2.0 - 1.0) * maxHueShift * localAmount;
+
+                float3 yiq = RGB2YIQ(rgb);
+
+                float I = yiq.y;
+                float Q = yiq.z;
+
+                float cosA = cos(angle);
+                float sinA = sin(angle);
+
+                float I2 = I * cosA - Q * sinA;
+                float Q2 = I * sinA + Q * cosA;
+
+                yiq.y = I2;
+                yiq.z = Q2;
+
+                float3 outRgb = YIQ2RGB(yiq);
+                return saturate(outRgb);
+            }
+
             // --- BLUR helper (3x3) ---
             float4 SampleMainWithBlur(float2 uv)
             {
@@ -522,12 +685,12 @@
                     return SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv);
                 }
 
-                float2 texel = _MainTex_TexelSize.xy;
-                float radius = blurAmount * _BlurMaxRadius;
+                float2 texel  = _MainTex_TexelSize.xy;
+                float  radius = blurAmount * _BlurMaxRadius;
                 float2 offset = texel * radius;
 
                 float4 col = 0;
-                float weightSum = 0;
+                float  weightSum = 0;
 
                 [unroll]
                 for (int x = -1; x <= 1; x++)
@@ -536,7 +699,7 @@
                     for (int y = -1; y <= 1; y++)
                     {
                         float2 uvOff = uv + float2(x, y) * offset;
-                        float w = 1.0;
+                        float  w = 1.0;
                         col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvOff) * w;
                         weightSum += w;
                     }
@@ -587,8 +750,10 @@
 
             float4 UnlitFragment(Varyings i) : SV_Target
             {
-                // >>> blur ici <<<
                 float4 mainTex = i.color * SampleMainWithBlur(i.uv);
+
+                // Variation de teinte
+                mainTex.rgb = ApplyInstanceTint(mainTex.rgb);
 
                 float3 diff = mainTex.rgb - _KeyColor.rgb;
                 float dist  = length(diff);

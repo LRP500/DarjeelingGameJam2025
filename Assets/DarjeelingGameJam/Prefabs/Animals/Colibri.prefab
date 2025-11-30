@@ -190,19 +190,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1485071898359473444, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.15
+      value: 0.12
       objectReference: {fileID: 0}
     - target: {fileID: 1485071898359473444, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.15
+      value: 0.12
       objectReference: {fileID: 0}
     - target: {fileID: 1485071898359473444, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.15
+      value: 0.12
       objectReference: {fileID: 0}
     - target: {fileID: 1485071898359473444, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_ConstrainProportionsScale
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1536458690122056229, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_Size.x
@@ -326,7 +326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Animals.Abilities.Wander
   _confinerReference: {fileID: 11400000, guid: b1c8bbdfc7c22422baf83d222ec53a85, type: 2}
-  _range: 5
+  _range: 3
   _decisionTime: 3
 --- !u!4 &7973104943992915713 stripped
 Transform:

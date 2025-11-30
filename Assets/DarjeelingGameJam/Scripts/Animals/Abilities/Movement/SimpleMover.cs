@@ -26,15 +26,5 @@ namespace DarjeelingGameJam.Animals.Abilities
             var movement = direction.normalized * (_speed * Time.fixedDeltaTime);
             Rigidbody.MovePosition(transform.position + movement);
         }
-
-        public override UniTask Enable()
-        {
-            return UniTask.CompletedTask;
-        }
-
-        public override UniTask Disable()
-        {
-            return UniTask.CompletedTask;
-        }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using DarjeelingGameJam.Spores;
@@ -64,7 +63,7 @@ namespace DarjeelingGameJam.Wind
                 other.attachedRigidbody.AddForce(_direction * _windForce, ForceMode2D.Impulse);
             }
         }
-        
+
         private async UniTask HandlePlantCollision(Collider2D other)
         {
             if (other.TryGetComponent<LoopEndOfClip>(out var wind))

@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace DarjeelingGameJam.Animals
@@ -8,7 +7,5 @@ namespace DarjeelingGameJam.Animals
         public Animal Owner { get; set; }
 
         public abstract void Initialize();
-        public abstract UniTask Enable();
-        public abstract UniTask Disable();
     }
 }

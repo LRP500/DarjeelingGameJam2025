@@ -639,6 +639,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3736140957794135575, guid: 2a500cf067d6e453cad5434200373a32, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -7.03
+      objectReference: {fileID: 0}
     - target: {fileID: 4109171950795403652, guid: 2a500cf067d6e453cad5434200373a32, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -700,6 +704,10 @@ PrefabInstance:
       propertyPath: Target.TrackingTarget
       value: 
       objectReference: {fileID: 1880052589}
+    - target: {fileID: 1557084832992087068, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
+      propertyPath: m_EventMask.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 2363578262702923325, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
       propertyPath: m_Name
       value: CameraRig

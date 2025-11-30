@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace DarjeelingGameJam.Animals
@@ -17,18 +16,12 @@ namespace DarjeelingGameJam.Animals
             {
                 _abilities.Add(ability);
                 ability.Owner = this;
+            }
+
+            foreach (var ability in abilities)
+            {
                 ability.Initialize();
             }
-        }
-
-        private void OnEnable()
-        {
-            _abilities.ForEach(x => x.Enable());
-        }
-
-        private void OnDisable()
-        {
-            _abilities.ForEach(x => x.Disable());
         }
 
         public T GetAbility<T>() where T : AnimalAbility

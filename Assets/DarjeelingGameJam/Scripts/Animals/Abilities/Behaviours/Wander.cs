@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace DarjeelingGameJam.Animals.Abilities
 {
-    public class Wander : AnimalAbility
+    public class Wander : MovementBehaviour
     {
         [SerializeField]
         private TransformReactiveVariable _confinerReference;
@@ -31,18 +31,22 @@ namespace DarjeelingGameJam.Animals.Abilities
             _mover = Owner.GetAbility<Mover>();
         }
 
-        public override async UniTask Enable()
+        private void OnEnable()
         {
-            if (_tokenSource != null)
-            {
-                return;
-            }
-
             _tokenSource = new CancellationTokenSource();
 
-            await RunDecisionLoop(_tokenSource.Token);
+            RunDecisionLoop(_tokenSource.Token).Forget();
         }
-
+        
+        private void OnDisable()
+        {
+            _tokenSource?.Cancel();
+            _tokenSource?.Dispose();
+            _tokenSource = null;
+            
+            _mover.SetTargetPosition(transform.position);
+        }
+        
         private async UniTask RunDecisionLoop(CancellationToken token)
         {
             while (!token.IsCancellationRequested)
@@ -62,16 +66,7 @@ namespace DarjeelingGameJam.Animals.Abilities
             position.y = Mathf.Clamp(position.y, _confiner.bounds.min.y, _confiner.bounds.max.y);
             return position;
         }
-
-        public override UniTask Disable()
-        {
-            _tokenSource?.Cancel();
-            _tokenSource?.Dispose();
-            _tokenSource = null;
-
-            return UniTask.CompletedTask;
-        }
-
+        
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.gold;

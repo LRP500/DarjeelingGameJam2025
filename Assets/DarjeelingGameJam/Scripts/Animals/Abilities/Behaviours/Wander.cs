@@ -1,7 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
 using Modules.Toolbag.Variables;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -23,40 +19,36 @@ namespace DarjeelingGameJam.Animals.Abilities
         private float _decisionTime;
 
         private Mover _mover;
-        private CancellationTokenSource _tokenSource;
         private BoxCollider2D _confiner;
+        private float _timer;
         
         public override void Initialize()
         {
             _mover = Owner.GetAbility<Mover>();
         }
 
-        private void OnEnable()
-        {
-            _tokenSource = new CancellationTokenSource();
-
-            RunDecisionLoop(_tokenSource.Token).Forget();
-        }
-        
         private void OnDisable()
         {
-            _tokenSource?.Cancel();
-            _tokenSource?.Dispose();
-            _tokenSource = null;
-            
             _mover.SetTargetPosition(transform.position);
         }
-        
-        private async UniTask RunDecisionLoop(CancellationToken token)
+
+        private void Update()
         {
-            while (!token.IsCancellationRequested)
+            _timer += Time.deltaTime;
+
+            if (_timer >= _decisionTime)
             {
-                var targetPosition = PickRandomPosition();
-                _mover.SetTargetPosition(targetPosition);
-                await Task.Delay(TimeSpan.FromSeconds(_decisionTime), cancellationToken: token);
+                UpdateTargetPosition();
+                _timer = 0;
             }
         }
 
+        private void UpdateTargetPosition()
+        {
+            var targetPosition = PickRandomPosition();
+            _mover.SetTargetPosition(targetPosition);
+        }
+        
         private Vector3 PickRandomPosition()
         {
             _confiner = _confinerReference.Value.GetComponent<BoxCollider2D>();

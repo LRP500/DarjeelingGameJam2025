@@ -124,5 +124,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.GameStart
   _sporeSpawnArea: {fileID: 1122213055382465007}
-  _spore: {fileID: 1277615276391774044, guid: 3ce908bf8ec534f92b9d1288bf77497b, type: 3}
+  _spore:
+  - {fileID: 1277615276391774044, guid: 503bbbae7ec304c4cb4456debe1f67bd, type: 3}
+  - {fileID: 1277615276391774044, guid: 90490ed5f98b7b046a5157964d748768, type: 3}
+  - {fileID: 1277615276391774044, guid: 8829eeae29a7a054d9acfb79ac540cfd, type: 3}
   _startingSporeCount: 10

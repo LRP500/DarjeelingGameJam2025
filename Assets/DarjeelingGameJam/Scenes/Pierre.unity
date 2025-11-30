@@ -692,6 +692,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1216447042002776567, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
+      propertyPath: _spore.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1216447042002776567, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
       propertyPath: _startingSporeCount
       value: 0
       objectReference: {fileID: 0}

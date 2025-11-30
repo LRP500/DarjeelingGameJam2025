@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: plantfront
+  m_Name: ground
   m_Shader: {fileID: 4800000, guid: 49556c04ae5b5ee48bc90cb64f82986e, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -50,27 +50,24 @@ Material:
     - _BaseWindStrength: 1
     - _BendByHeight: 0.5
     - _BendIntensity: 1
-    - _BlurAmount: 0.4
-    - _BlurMaxRadius: 7.5
+    - _BlurAmount: 0
+    - _BlurMaxRadius: 3.8
     - _ColorWobbleAmount: 0.41
     - _ColorWobbleScale: 0.2
     - _ColorWobbleSpeed: 0.1
     - _EdgeDarkening: 0.6
     - _EnableExternalAlpha: 0
     - _EnableWind: 0
-    - _EnvBlendStrength: 0.45
     - _GustDuration: 1
     - _GustInterval: 1
     - _GustStrength: 1
-    - _KeyFeather: 0.47
-    - _KeyTolerance: 1
+    - _KeyFeather: 0.78
+    - _KeyTolerance: 0.24
     - _NoiseScale: 0.59
-    - _OverlayStrength: 0
     - _PaperIntensity: 0.5
     - _PaperTiling: 5
     - _PosterizeSteps: 16
     - _RandomSeed: 1
-    - _TintVariationAmount: 0.2
     - _WindNoiseScale: 1.3
     - _WindSpeed: 4.28
     - _WindStrength: 0.49
@@ -79,7 +76,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _KeyColor: {r: 1, g: 1, b: 1, a: 1}
-    - _OverlayBaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _WindDirection: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

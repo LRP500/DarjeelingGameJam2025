@@ -144,5 +144,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LoopEndOfClip
   loopLastFrames: 3
   windActive: 0
-  windFrameStep: 2
+  windFrameStep: 0
   windBlendSpeed: 5

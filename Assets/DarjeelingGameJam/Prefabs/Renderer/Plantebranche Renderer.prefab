@@ -79,8 +79,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1311765985
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8ed401c14ef06704798f68daebb97baa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -127,9 +127,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 176790b136f8cf442b936233b929c0ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoopEndOfClip
-  loopLastFrames: 5
+  loopLastFrames: 3
   windActive: 0
-  windFrameStep: 2
+  windFrameStep: 0
   windBlendSpeed: 5
 --- !u!114 &2026232681935481769
 MonoBehaviour:

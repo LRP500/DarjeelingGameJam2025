@@ -1,3 +1,4 @@
+using R3;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -36,6 +37,15 @@ namespace DarjeelingGameJam.Wind
             
             _animator.SetFloat(Rng, Random.value > 0.5f ? 0 : 1);
             _animator.SetTrigger(Launch);
+
+            Invoke(nameof(Hide), 1f);
+            Destroy(gameObject, 4f);
+        }
+
+        private void Hide()
+        {
+            _forceTrigger.gameObject.SetActive(false);
+            _animator.gameObject.SetActive(false);
         }
     }
 }

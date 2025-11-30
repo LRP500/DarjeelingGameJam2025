@@ -42,8 +42,7 @@ namespace DarjeelingGameJam.Wind
 
         private void ProcessWindTrace(Vector2 start, Vector2 end)
         {
-            var effect = SpawnWindEffect(start, end);
-            Destroy(effect.gameObject, 1f);
+            SpawnWindEffect(start, end);
         }
 
         private Transform SpawnWindEffect(Vector2 start, Vector2 end)

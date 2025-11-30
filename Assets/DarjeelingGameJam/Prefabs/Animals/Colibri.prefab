@@ -326,7 +326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Animals.Abilities.Wander
   _confinerReference: {fileID: 11400000, guid: b1c8bbdfc7c22422baf83d222ec53a85, type: 2}
-  _range: 10
+  _range: 5
   _decisionTime: 3
 --- !u!4 &7973104943992915713 stripped
 Transform:

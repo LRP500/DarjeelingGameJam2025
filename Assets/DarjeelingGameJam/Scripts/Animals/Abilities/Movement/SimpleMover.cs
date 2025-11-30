@@ -25,6 +25,7 @@ namespace DarjeelingGameJam.Animals.Abilities
             var direction = position - transform.position;
             var movement = direction.normalized * (_speed * Time.fixedDeltaTime);
             Rigidbody.MovePosition(transform.position + movement);
+            Rigidbody.linearVelocity = movement;
         }
     }
 }

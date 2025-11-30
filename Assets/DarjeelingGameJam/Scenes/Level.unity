@@ -850,7 +850,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1216447042002776567, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
       propertyPath: _spores.Array.size
-      value: 14
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 1216447042002776567, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
       propertyPath: '_spores.Array.data[10]'
@@ -864,6 +864,38 @@ PrefabInstance:
       propertyPath: '_spores.Array.data[13]'
       value: 
       objectReference: {fileID: 1277615276391774044, guid: 53593f88b6c8e4641b9adb545d1a5cbb, type: 3}
+    - target: {fileID: 1216447042002776567, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
+      propertyPath: '_spores.Array.data[14]'
+      value: 
+      objectReference: {fileID: 1277615276391774044, guid: 503bbbae7ec304c4cb4456debe1f67bd, type: 3}
+    - target: {fileID: 1216447042002776567, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
+      propertyPath: '_spores.Array.data[15]'
+      value: 
+      objectReference: {fileID: 1277615276391774044, guid: 90490ed5f98b7b046a5157964d748768, type: 3}
+    - target: {fileID: 1216447042002776567, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
+      propertyPath: '_spores.Array.data[16]'
+      value: 
+      objectReference: {fileID: 1277615276391774044, guid: 8829eeae29a7a054d9acfb79ac540cfd, type: 3}
+    - target: {fileID: 1216447042002776567, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
+      propertyPath: '_spores.Array.data[17]'
+      value: 
+      objectReference: {fileID: 1277615276391774044, guid: 935bd812dda25df43b57b4e0ff13c1e8, type: 3}
+    - target: {fileID: 1216447042002776567, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
+      propertyPath: '_spores.Array.data[18]'
+      value: 
+      objectReference: {fileID: 1277615276391774044, guid: 4b54b6c594281fc428861bcb107bbd42, type: 3}
+    - target: {fileID: 1216447042002776567, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
+      propertyPath: '_spores.Array.data[19]'
+      value: 
+      objectReference: {fileID: 1277615276391774044, guid: 53593f88b6c8e4641b9adb545d1a5cbb, type: 3}
+    - target: {fileID: 1216447042002776567, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
+      propertyPath: '_spores.Array.data[20]'
+      value: 
+      objectReference: {fileID: 1277615276391774044, guid: d28379ec1cae3594c88a50f7216c32e0, type: 3}
+    - target: {fileID: 1216447042002776567, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
+      propertyPath: '_spores.Array.data[21]'
+      value: 
+      objectReference: {fileID: 1277615276391774044, guid: 73e09fac0b6d71645af1b3d17bf2fca4, type: 3}
     - target: {fileID: 5046648391143838102, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
       propertyPath: m_Name
       value: GameStart

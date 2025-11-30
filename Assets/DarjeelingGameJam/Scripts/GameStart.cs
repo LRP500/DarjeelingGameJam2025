@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using DarjeelingGameJam.Spores;
+using Modules.Toolbag.Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -10,9 +12,9 @@ namespace DarjeelingGameJam
         private BoxCollider2D _sporeSpawnArea;
 
         [SerializeField]
-        private Spore _spore;
+        private List<Spore> _spore;
         
-        [MinValue(1)]
+        [MinValue(0)]
         [SerializeField]
         private int _startingSporeCount = 4;
         
@@ -20,8 +22,9 @@ namespace DarjeelingGameJam
         {
             for (var i = 0; i < _startingSporeCount; i++)
             {
+                var randomSpore = _spore.Random();
                 var position = RandomPointInBounds(_sporeSpawnArea.bounds);
-                var spore = Instantiate(_spore, position, Quaternion.identity);
+                var spore = Instantiate(randomSpore, position, Quaternion.identity);
                 spore.Detach();
             }
         }

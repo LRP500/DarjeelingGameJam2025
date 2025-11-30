@@ -1,3 +1,4 @@
+using System;
 using DarjeelingGameJam.Plants;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -12,7 +13,9 @@ namespace DarjeelingGameJam.Spores
         private Plant _plant;
         
         private Rigidbody2D _rigidbody;
-        
+
+        public bool IsDetached { get; private set; }
+
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
@@ -21,12 +24,15 @@ namespace DarjeelingGameJam.Spores
         [Button]
         private void Attach()
         {
-            _rigidbody.simulated = false;
+            IsDetached = false;
+            _rigidbody.bodyType = RigidbodyType2D.Kinematic;
         }
         
         [Button]
         public void Detach()
         {
+            IsDetached = true;
+            _rigidbody.bodyType = RigidbodyType2D.Dynamic;
             _rigidbody.simulated = true;
         }
 

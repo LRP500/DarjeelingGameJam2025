@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Spore
+  - Plant
   layers:
   - Default
   - TransparentFX

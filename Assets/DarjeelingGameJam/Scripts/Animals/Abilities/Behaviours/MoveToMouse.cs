@@ -10,7 +10,7 @@ namespace DarjeelingGameJam.Animals.Abilities
 {
     public class MoveToMouse : MovementBehaviour
     {
-        [MinValue(0.1f)]
+        [MinValue(0.01f)]
         [SerializeField]
         private float _refreshRate = 0.5f;
 

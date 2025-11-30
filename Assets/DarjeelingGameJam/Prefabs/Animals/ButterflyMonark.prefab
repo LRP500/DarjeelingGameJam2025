@@ -14,15 +14,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1485071898359473444, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.12
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: 1485071898359473444, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.12
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: 1485071898359473444, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.12
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: 1485071898359473444, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_ConstrainProportionsScale
@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3572754227096312017, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 32.32
       objectReference: {fileID: 0}
     - target: {fileID: 3572754227096312017, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -66,15 +66,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3572754227096312017, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3572754227096312017, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3572754227096312017, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3572754227096312017, guid: 0dfa6e57f81ab47bda156a2e026d12f7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

@@ -25,6 +25,7 @@ namespace DarjeelingGameJam.Animals.Abilities
         public override void Initialize()
         {
             _mover = Owner.GetAbility<Mover>();
+            _confiner = transform.parent.GetComponentInChildren<BoxCollider2D>();
         }
 
         private void OnDisable()
@@ -51,7 +52,6 @@ namespace DarjeelingGameJam.Animals.Abilities
         
         private Vector3 PickRandomPosition()
         {
-            _confiner = _confinerReference.Value.GetComponent<BoxCollider2D>();
             var random = Random.insideUnitCircle * _range;
             var position = transform.position + new Vector3(random.x, random.y, 0);
             position.x = Mathf.Clamp(position.x, _confiner.bounds.min.x, _confiner.bounds.max.x);

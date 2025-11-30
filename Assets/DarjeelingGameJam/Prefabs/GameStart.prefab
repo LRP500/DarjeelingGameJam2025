@@ -39,7 +39,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3125086950837871482}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -76,7 +76,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 40, y: 1}
+  m_Size: {x: 100, y: 1}
   m_EdgeRadius: 0
 --- !u!1 &5046648391143838102
 GameObject:
@@ -124,6 +124,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.GameStart
   _sporeSpawnArea: {fileID: 1122213055382465007}
-  _spore:
+  _spores:
   - {fileID: 1277615276391774044, guid: 503bbbae7ec304c4cb4456debe1f67bd, type: 3}
-  _startingSporeCount: 10
+  - {fileID: 1277615276391774044, guid: 90490ed5f98b7b046a5157964d748768, type: 3}
+  - {fileID: 1277615276391774044, guid: 8829eeae29a7a054d9acfb79ac540cfd, type: 3}
+  - {fileID: 1277615276391774044, guid: 90d67f642b4a11143a376f4b3d309636, type: 3}
+  - {fileID: 1277615276391774044, guid: 4b54b6c594281fc428861bcb107bbd42, type: 3}
+  - {fileID: 1277615276391774044, guid: de8f8bd647963bb4293b83a85de31ca7, type: 3}

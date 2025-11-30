@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1277615276391774044}
   - component: {fileID: 3523418667534530429}
   m_Layer: 12
-  m_Name: Spore 1
+  m_Name: Spore fleurflashrose03
   m_TagString: Spore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca0dce7c4b2d46389c65eec62c1f09d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Spores.Spore
-  _plant: {fileID: 599769630432046686, guid: 9d396af900bbead4d8167c11aeb868b6, type: 3}
+  _plant: {fileID: 746744399958750800, guid: aceb7bdc7d47a8048880d5d0ef9de8dd, type: 3}
 --- !u!212 &3523418667534530429
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -159,7 +159,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 02b0204230e1642058a2ca01ea592e24, type: 3}
-  m_Color: {r: 1, g: 0.42452818, b: 0.86607105, a: 0.45882353}
+  m_Color: {r: 1, g: 0, b: 0.26432276, a: 0.4745098}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

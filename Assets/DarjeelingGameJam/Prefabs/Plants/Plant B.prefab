@@ -30,6 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4578012082812467878}
   - {fileID: 3575704213970472573}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -114,4 +115,74 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 3959247792203264465, guid: 96c2a2731ae3be04cae5cb864023ae65, type: 3}
   m_PrefabInstance: {fileID: 535197088075857836}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6219673464871006278
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3250689100205710635}
+    m_Modifications:
+    - target: {fileID: 3069904263198146337, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+      propertyPath: _spore
+      value: 
+      objectReference: {fileID: 1277615276391774044, guid: 4b54b6c594281fc428861bcb107bbd42, type: 3}
+    - target: {fileID: 3069904263198146337, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+      propertyPath: _interval
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627098494808132320, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.16
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627098494808132320, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627098494808132320, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627098494808132320, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627098494808132320, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627098494808132320, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627098494808132320, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627098494808132320, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627098494808132320, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7627098494808132320, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8969174567197896370, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+      propertyPath: m_Name
+      value: SporeGenerator
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+--- !u!4 &4578012082812467878 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7627098494808132320, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
+  m_PrefabInstance: {fileID: 6219673464871006278}
   m_PrefabAsset: {fileID: 0}

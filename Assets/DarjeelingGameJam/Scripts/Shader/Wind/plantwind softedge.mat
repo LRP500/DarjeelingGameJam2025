@@ -50,8 +50,8 @@ Material:
     - _GustDuration: 1
     - _GustInterval: 1
     - _GustStrength: 1
-    - _KeyFeather: 1
-    - _KeyTolerance: 0.62
+    - _KeyFeather: 0.64
+    - _KeyTolerance: 0.23
     - _NoiseScale: 0.59
     - _RandomSeed: 1
     - _WindNoiseScale: 1.3

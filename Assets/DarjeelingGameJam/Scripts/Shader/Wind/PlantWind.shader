@@ -28,6 +28,10 @@
         _KeyColor     ("Key Color", Color) = (1,1,1,1)
         _KeyTolerance ("Key Tolerance", Range(0,1)) = 0.1
         _KeyFeather   ("Key Feather", Range(0,1))   = 0.1
+
+        // --- Blur DOF léger ---
+        _BlurAmount    ("Blur Amount", Range(0,1)) = 0.0
+        _BlurMaxRadius ("Blur Max Radius", Float)  = 2.0
     }
 
     SubShader
@@ -90,6 +94,7 @@
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
             UNITY_TEXTURE_STREAMING_DEBUG_VARS_FOR_TEX(_MainTex);
+            float4 _MainTex_TexelSize; // pour le blur
 
             TEXTURE2D(_MaskTex);
             SAMPLER(sampler_MaskTex);
@@ -112,9 +117,12 @@
                 float4 _KeyColor;
                 float  _KeyTolerance;
                 float  _KeyFeather;
+
+                float  _BlurAmount;
+                float  _BlurMaxRadius;
             CBUFFER_END
 
-            // === manquait ce bloc → _ShapeLightTexture0 ===
+            // === Shape lights ===
             #if USE_SHAPE_LIGHT_TYPE_0
             SHAPE_LIGHT(0)
             #endif
@@ -154,6 +162,38 @@
                 float gustStrength = _BaseWindStrength + randAmp * _GustStrength;
 
                 return gustStrength * active * envelope;
+            }
+
+            // --- BLUR helper (3x3) ---
+            float4 SampleMainWithBlur(float2 uv)
+            {
+                float blurAmount = _BlurAmount;
+                if (blurAmount <= 0.0001)
+                {
+                    return SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv);
+                }
+
+                float2 texel = _MainTex_TexelSize.xy;
+                float radius = blurAmount * _BlurMaxRadius;
+                float2 offset = texel * radius;
+
+                float4 col = 0;
+                float weightSum = 0;
+
+                [unroll]
+                for (int x = -1; x <= 1; x++)
+                {
+                    [unroll]
+                    for (int y = -1; y <= 1; y++)
+                    {
+                        float2 uvOff = uv + float2(x, y) * offset;
+                        float w = 1.0;
+                        col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvOff) * w;
+                        weightSum += w;
+                    }
+                }
+
+                return col / max(weightSum, 0.0001);
             }
 
             Varyings CombinedShapeLightVertex(Attributes v)
@@ -202,7 +242,8 @@
 
             half4 CombinedShapeLightFragment(Varyings i) : SV_Target
             {
-                half4 main = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
+                // >>> blur ici <<<
+                half4 main = i.color * SampleMainWithBlur(i.uv);
                 const half4 mask = SAMPLE_TEXTURE2D(_MaskTex, sampler_MaskTex, i.uv);
 
                 // Chroma key
@@ -288,6 +329,9 @@
                 float4 _KeyColor;
                 float  _KeyTolerance;
                 float  _KeyFeather;
+
+                float  _BlurAmount;
+                float  _BlurMaxRadius;
             CBUFFER_END
 
             float Hash11(float n)
@@ -420,6 +464,7 @@
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
             UNITY_TEXTURE_STREAMING_DEBUG_VARS_FOR_TEX(_MainTex);
+            float4 _MainTex_TexelSize; // pour le blur
 
             CBUFFER_START( UnityPerMaterial )
                 half4 _Color;
@@ -439,6 +484,9 @@
                 float4 _KeyColor;
                 float  _KeyTolerance;
                 float  _KeyFeather;
+
+                float  _BlurAmount;
+                float  _BlurMaxRadius;
             CBUFFER_END
 
             float Hash11(float n)
@@ -463,6 +511,38 @@
                 float gustStrength = _BaseWindStrength + randAmp * _GustStrength;
 
                 return gustStrength * active * envelope;
+            }
+
+            // --- BLUR helper (3x3) ---
+            float4 SampleMainWithBlur(float2 uv)
+            {
+                float blurAmount = _BlurAmount;
+                if (blurAmount <= 0.0001)
+                {
+                    return SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv);
+                }
+
+                float2 texel = _MainTex_TexelSize.xy;
+                float radius = blurAmount * _BlurMaxRadius;
+                float2 offset = texel * radius;
+
+                float4 col = 0;
+                float weightSum = 0;
+
+                [unroll]
+                for (int x = -1; x <= 1; x++)
+                {
+                    [unroll]
+                    for (int y = -1; y <= 1; y++)
+                    {
+                        float2 uvOff = uv + float2(x, y) * offset;
+                        float w = 1.0;
+                        col += SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvOff) * w;
+                        weightSum += w;
+                    }
+                }
+
+                return col / max(weightSum, 0.0001);
             }
 
             Varyings UnlitVertex(Attributes attributes)
@@ -507,7 +587,8 @@
 
             float4 UnlitFragment(Varyings i) : SV_Target
             {
-                float4 mainTex = i.color * SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
+                // >>> blur ici <<<
+                float4 mainTex = i.color * SampleMainWithBlur(i.uv);
 
                 float3 diff = mainTex.rgb - _KeyColor.rgb;
                 float dist  = length(diff);

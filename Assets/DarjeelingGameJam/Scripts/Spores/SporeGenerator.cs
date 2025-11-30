@@ -42,6 +42,7 @@ namespace DarjeelingGameJam.Spores
         private void OnDisable()
         {
             _disposable?.Dispose();
+            _disposable = null;
         }
 
         private void Generate()

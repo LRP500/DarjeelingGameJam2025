@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 740755434815710128}
   - component: {fileID: 8067003107708808785}
   m_Layer: 0
-  m_Name: WindGust
+  m_Name: Wind
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -141,7 +141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c8b81b5cb0b4a2e8e7e2d4bbd307bda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Wind.WindForceTrigger
-  _windForce: 0.5
+  _windForce: 0.4
+  _sporeDetachChance: 0.2
 --- !u!1001 &5788320666351489615
 PrefabInstance:
   m_ObjectHideFlags: 0

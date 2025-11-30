@@ -12,7 +12,7 @@ namespace DarjeelingGameJam
         [SerializeField]
         private Spore _spore;
         
-        [MinValue(1)]
+        [MinValue(0)]
         [SerializeField]
         private int _startingSporeCount = 4;
         

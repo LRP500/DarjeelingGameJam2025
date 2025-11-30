@@ -1,3 +1,4 @@
+using Modules.Toolbag.Extensions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,13 +22,18 @@ namespace DarjeelingGameJam.Wind
         {
             if (value.isPressed)
             {
-                _start = GetMousePosition();
+                _start = Mouse.current.position.ReadValue();
             }
             else if (!value.isPressed)
             {
-                _end = GetMousePosition();
-                
-                ProcessWindTrace(_start, _end);
+                _end = Mouse.current.position.ReadValue();
+
+                if (!_start.AlmostEqual(_end, 1f))
+                {
+                    var worldStart = _camera.ScreenToWorldPoint(_start);
+                    var worldEnd = _camera.ScreenToWorldPoint(_end);
+                    ProcessWindTrace(worldStart, worldEnd);
+                }
                 
                 _start = Vector2.zero;
                 _end = Vector2.zero;
@@ -47,11 +53,6 @@ namespace DarjeelingGameJam.Wind
             var windEffect = Instantiate(_windEffect, start, Quaternion.Euler(0, 0, angle));
             windEffect.Initialize(direction);
             return windEffect.transform;
-        }
-
-        private Vector3 GetMousePosition()
-        {
-            return _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         }
     }
 }

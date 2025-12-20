@@ -997,11 +997,56 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
+      propertyPath: _triggerSpawner
+      value: 
+      objectReference: {fileID: 1414739736131858393}
+    - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
+      propertyPath: _velocityTracker
+      value: 
+      objectReference: {fileID: 1414739736131858391}
+    - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
+      propertyPath: _particleController
+      value: 
+      objectReference: {fileID: 1414739736131858390}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
+--- !u!114 &1414739736131858390 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3124386249998439863, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
+  m_PrefabInstance: {fileID: 1414739736131858388}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e20fc19783c292349a84b8bd03e82a5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Wind.WindParticleController
+--- !u!114 &1414739736131858391 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6650400513954399097, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
+  m_PrefabInstance: {fileID: 1414739736131858388}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1841339e6091c154cbddc1be60a35f01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Wind.MouseVelocityTracker
+--- !u!114 &1414739736131858393 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1676663490542761237, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
+  m_PrefabInstance: {fileID: 1414739736131858388}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a12d04be70204fb46bdaf43aa6445e61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Wind.WindTriggerSpawner
 --- !u!1001 &2898692260820144029
 PrefabInstance:
   m_ObjectHideFlags: 0

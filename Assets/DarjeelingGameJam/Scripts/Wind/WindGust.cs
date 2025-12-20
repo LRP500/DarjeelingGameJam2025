@@ -29,12 +29,17 @@ namespace DarjeelingGameJam.Wind
             var position = _forceTrigger.transform.localPosition;
             position.x += direction.magnitude / 2;
             position.y = 0f;
-            
+
             _forceTrigger.Initialize(direction);
             _forceTrigger.transform.localPosition = position;
-            _forceTrigger.Collider.size = new Vector2(direction.magnitude, _effectWidth);
-            _forceTrigger.Collider.offset = Vector2.zero;
-            
+
+            // Cast to BoxCollider2D for legacy WindGust system
+            if (_forceTrigger.Collider is BoxCollider2D boxCollider)
+            {
+                boxCollider.size = new Vector2(direction.magnitude, _effectWidth);
+                boxCollider.offset = Vector2.zero;
+            }
+
             _animator.SetFloat(Rng, Random.value > 0.5f ? 0 : 1);
             _animator.SetTrigger(Launch);
 

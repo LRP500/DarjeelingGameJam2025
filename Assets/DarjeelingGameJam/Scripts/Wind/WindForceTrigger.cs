@@ -8,7 +8,6 @@ using Random = UnityEngine.Random;
 
 namespace DarjeelingGameJam.Wind
 {
-    [RequireComponent(typeof(BoxCollider2D))]
     public class WindForceTrigger : MonoBehaviour
     {
         [MinValue(0.1)]
@@ -18,23 +17,39 @@ namespace DarjeelingGameJam.Wind
         [Range(0, 1)]
         [SerializeField]
         private float _sporeDetachChance = 0.5f;
-        
+
         [MinValue(0)]
         [SerializeField]
         private float _plantEffectDuration = 2f;
-        
+
         private Vector3 _direction;
-        
-        public BoxCollider2D Collider { get; private set; }
+        private float _forceMagnitude;
+
+        public Collider2D Collider { get; private set; }
 
         private void Awake()
         {
-            Collider = GetComponent<BoxCollider2D>();
+            // Support both BoxCollider2D and CircleCollider2D
+            Collider = GetComponent<Collider2D>();
         }
 
+        /// <summary>
+        /// Initialize with direction only (legacy compatibility)
+        /// </summary>
         public void Initialize(Vector3 direction)
         {
             _direction = direction.normalized;
+            _forceMagnitude = _windForce;
+        }
+
+        /// <summary>
+        /// Initialize with direction, custom force magnitude, and lifetime
+        /// </summary>
+        public void Initialize(Vector3 direction, float forceMagnitude, float lifetime)
+        {
+            _direction = direction.normalized;
+            _forceMagnitude = forceMagnitude;
+            Destroy(gameObject, lifetime);
         }
         
         private void OnTriggerEnter2D(Collider2D other)
@@ -60,7 +75,7 @@ namespace DarjeelingGameJam.Wind
 
             if (spore.IsDetached)
             {
-                other.attachedRigidbody.AddForce(_direction * _windForce, ForceMode2D.Impulse);
+                other.attachedRigidbody.AddForce(_direction * _forceMagnitude, ForceMode2D.Impulse);
             }
         }
 

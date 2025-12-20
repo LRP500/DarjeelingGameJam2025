@@ -790,7 +790,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _maxForce
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _minForce
@@ -826,7 +826,7 @@ PrefabInstance:
       objectReference: {fileID: 1414739736131858391}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _maxTriggerRadius
-      value: 5
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _minTriggerRadius
@@ -850,7 +850,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _continuousForceMultiplier
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _secondaryTrailWidthMultiplier

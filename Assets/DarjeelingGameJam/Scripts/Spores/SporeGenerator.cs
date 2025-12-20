@@ -53,7 +53,8 @@ namespace DarjeelingGameJam.Spores
                 transform.position.x + offset.x,
                 transform.position.y + offset.y);
 
-            var spore = Instantiate(_spore, position, Quaternion.identity, transform);
+            // Ne pas parenter les spores pour qu'elles gardent leur taille d'origine
+            var spore = Instantiate(_spore, position, Quaternion.identity, null);
 
             if (_simulateOnSpawn)
             {

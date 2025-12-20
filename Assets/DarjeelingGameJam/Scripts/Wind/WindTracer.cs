@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
 using DarjeelingGameJam.Spores;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -14,6 +13,7 @@ namespace DarjeelingGameJam.Wind
     /// Gère aussi les trails visuels multiples selon la vitesse.
     /// </summary>
     [RequireComponent(typeof(CircleCollider2D))]
+    [RequireComponent(typeof(Rigidbody2D))]
     public class WindTracer : MonoBehaviour
     {
         [Header("References")]
@@ -26,25 +26,25 @@ namespace DarjeelingGameJam.Wind
         private WindParticleController _particleController;
 
         [Header("Trigger Settings")]
-        [Tooltip("Taille minimale du trigger")]
+        [Tooltip("Taille minimale du trigger (même à l'arrêt)")]
         [MinValue(0.1f)]
         [SerializeField]
-        private float _minTriggerRadius = 0.5f;
+        private float _minTriggerRadius = 2f;
 
-        [Tooltip("Taille maximale du trigger")]
+        [Tooltip("Taille maximale du trigger (vitesse max)")]
         [MinValue(0.1f)]
         [SerializeField]
-        private float _maxTriggerRadius = 2.5f;
+        private float _maxTriggerRadius = 7f;
 
-        [Tooltip("Force minimale")]
+        [Tooltip("Force minimale (même à l'arrêt)")]
         [MinValue(0f)]
         [SerializeField]
-        private float _minForce = 1f;
+        private float _minForce = 0.5f;
 
-        [Tooltip("Force maximale")]
+        [Tooltip("Force maximale (vitesse max)")]
         [MinValue(0f)]
         [SerializeField]
-        private float _maxForce = 15f;
+        private float _maxForce = 1f;
 
         [Tooltip("Force continue (effet ballon)")]
         [SerializeField]
@@ -54,13 +54,13 @@ namespace DarjeelingGameJam.Wind
         [Tooltip("Multiplicateur de force continue")]
         [MinValue(0f)]
         [SerializeField]
-        private float _continuousForceMultiplier = 5f;
+        private float _continuousForceMultiplier = 1.5f;
 
-
-        [Tooltip("Durée effet vent sur plantes")]
+        [Header("Plant Wind Settings")]
+        [Tooltip("Durée pendant laquelle le vent reste actif après que la plante sorte du trigger (évite le clignotement)")]
         [MinValue(0f)]
         [SerializeField]
-        private float _plantEffectDuration = 2f;
+        private float _plantWindDuration = 1f;
 
         [Header("Multi-Trails Settings")]
         [Tooltip("Activer les trails multiples")]
@@ -106,6 +106,7 @@ namespace DarjeelingGameJam.Wind
         // Private vars
         private Camera _camera;
         private CircleCollider2D _circleCollider;
+        private Rigidbody2D _rigidbody;
         private Vector2 _currentDirection;
         private float _currentForce;
         private float _currentRadius;
@@ -123,11 +124,19 @@ namespace DarjeelingGameJam.Wind
         {
             _camera = Camera.main;
             _circleCollider = GetComponent<CircleCollider2D>();
+            _rigidbody = GetComponent<Rigidbody2D>();
 
             if (_circleCollider == null)
                 _circleCollider = gameObject.AddComponent<CircleCollider2D>();
 
+            if (_rigidbody == null)
+                _rigidbody = gameObject.AddComponent<Rigidbody2D>();
+
             _circleCollider.isTrigger = true;
+
+            // Configure Rigidbody2D pour qu'il ne soit pas affecté par la physique
+            _rigidbody.bodyType = RigidbodyType2D.Kinematic;
+            _rigidbody.gravityScale = 0f;
 
             if (_enableMultiTrails)
                 InitializeTrailPool();
@@ -221,9 +230,13 @@ namespace DarjeelingGameJam.Wind
             }
             else if (other.CompareTag("Plant"))
             {
-                var loopEndOfClip = other.GetComponent<LoopEndOfClip>();
+                var loopEndOfClip = other.GetComponentInParent<LoopEndOfClip>();
                 if (loopEndOfClip != null)
+                {
                     _plantsInTrigger.Remove(loopEndOfClip);
+                    // Désactiver le vent après un délai
+                    DeactivatePlantWindAfterDelay(loopEndOfClip);
+                }
             }
         }
 
@@ -253,21 +266,23 @@ namespace DarjeelingGameJam.Wind
 
         private void HandlePlantEnter(Collider2D other)
         {
-            var loopEndOfClip = other.GetComponent<LoopEndOfClip>();
-            if (loopEndOfClip == null) return;
+            var loopEndOfClip = other.GetComponentInParent<LoopEndOfClip>();
+            if (loopEndOfClip == null)
+                return;
 
             _plantsInTrigger.Add(loopEndOfClip);
-            ActivatePlantWind(loopEndOfClip).Forget();
+            loopEndOfClip.windActive = true;
         }
 
-        private async UniTask ActivatePlantWind(LoopEndOfClip loopEndOfClip)
+        private async void DeactivatePlantWindAfterDelay(LoopEndOfClip loopEndOfClip)
         {
-            if (loopEndOfClip == null) return;
+            if (loopEndOfClip == null)
+                return;
 
-            loopEndOfClip.windActive = true;
+            // Attendre la durée configurée
+            await Task.Delay(System.TimeSpan.FromSeconds(_plantWindDuration));
 
-            await Task.Delay(System.TimeSpan.FromSeconds(_plantEffectDuration));
-
+            // Désactiver seulement si la plante n'est pas revenue dans le trigger entre-temps
             if (loopEndOfClip != null && !_plantsInTrigger.Contains(loopEndOfClip))
             {
                 loopEndOfClip.windActive = false;

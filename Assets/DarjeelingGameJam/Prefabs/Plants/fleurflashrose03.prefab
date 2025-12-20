@@ -179,9 +179,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3392041603459400997}
     m_Modifications:
+    - target: {fileID: 813165635275359579, guid: 2d18851672a61c048be8b522129225e6, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ef57c8a2873b18c40a6bd21d6f469e0a, type: 3}
+    - target: {fileID: 813165635275359579, guid: 2d18851672a61c048be8b522129225e6, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 998538949572638924, guid: 2d18851672a61c048be8b522129225e6, type: 3}
       propertyPath: m_Name
       value: fleurflashrose03
+      objectReference: {fileID: 0}
+    - target: {fileID: 3093704831989248180, guid: 2d18851672a61c048be8b522129225e6, type: 3}
+      propertyPath: m_TagString
+      value: Plant
+      objectReference: {fileID: 0}
+    - target: {fileID: 4048189082629255708, guid: 2d18851672a61c048be8b522129225e6, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4048189082629255708, guid: 2d18851672a61c048be8b522129225e6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -235,7 +251,7 @@ PrefabInstance:
       addedObject: {fileID: 708680836910401526}
     - targetCorrespondingSourceObject: {fileID: 3093704831989248180, guid: 2d18851672a61c048be8b522129225e6, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6724367482155977375}
+      addedObject: {fileID: 3972554526235465778}
   m_SourcePrefab: {fileID: 100100000, guid: 2d18851672a61c048be8b522129225e6, type: 3}
 --- !u!4 &5138980826309988938 stripped
 Transform:
@@ -285,7 +301,7 @@ MonoBehaviour:
   windActive: 0
   windFrameStep: 2
   windBlendSpeed: 5
---- !u!60 &6724367482155977375
+--- !u!60 &3972554526235465778
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

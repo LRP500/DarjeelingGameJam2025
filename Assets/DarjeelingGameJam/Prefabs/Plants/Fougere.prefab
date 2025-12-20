@@ -105,6 +105,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fougere
       objectReference: {fileID: 0}
+    - target: {fileID: 1618848726413984461, guid: b1c28ebf2a0dab84fa88e30454949574, type: 3}
+      propertyPath: m_TagString
+      value: Plant
+      objectReference: {fileID: 0}
     - target: {fileID: 8278996114383155593, guid: b1c28ebf2a0dab84fa88e30454949574, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.162

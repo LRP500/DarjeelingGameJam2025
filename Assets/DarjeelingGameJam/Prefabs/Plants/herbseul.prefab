@@ -113,6 +113,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: herbeseule
       objectReference: {fileID: 0}
+    - target: {fileID: 6896805067391109566, guid: 3cd366d92615a564a8ecf72e5a4bffe3, type: 3}
+      propertyPath: m_TagString
+      value: Plant
+      objectReference: {fileID: 0}
     - target: {fileID: 8963948441974517011, guid: 3cd366d92615a564a8ecf72e5a4bffe3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.01

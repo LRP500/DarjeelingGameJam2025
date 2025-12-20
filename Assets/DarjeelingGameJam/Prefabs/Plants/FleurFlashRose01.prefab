@@ -227,6 +227,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6089737516055734096, guid: cd0fa8cea1a8cfd448a60df355fcb7ce, type: 3}
+      propertyPath: m_TagString
+      value: Plant
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -239,7 +243,7 @@ PrefabInstance:
       addedObject: {fileID: 1022980324268433430}
     - targetCorrespondingSourceObject: {fileID: 6089737516055734096, guid: cd0fa8cea1a8cfd448a60df355fcb7ce, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5624226486428236491}
+      addedObject: {fileID: 6385017061836127916}
   m_SourcePrefab: {fileID: 100100000, guid: cd0fa8cea1a8cfd448a60df355fcb7ce, type: 3}
 --- !u!1 &3171048512721788932 stripped
 GameObject:
@@ -284,7 +288,7 @@ MonoBehaviour:
   windActive: 0
   windFrameStep: 2
   windBlendSpeed: 5
---- !u!60 &5624226486428236491
+--- !u!60 &6385017061836127916
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

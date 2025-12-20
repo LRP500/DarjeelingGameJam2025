@@ -219,6 +219,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2143133056975210238, guid: af8feafe6ba91a34b88ef0b14c641188, type: 3}
+      propertyPath: m_TagString
+      value: Plant
+      objectReference: {fileID: 0}
     - target: {fileID: 3338118431839593692, guid: af8feafe6ba91a34b88ef0b14c641188, type: 3}
       propertyPath: m_Name
       value: fougereViolette

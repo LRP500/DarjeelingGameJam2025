@@ -200,8 +200,21 @@ namespace DarjeelingGameJam.Wind
                     Rigidbody2D rb = spore.GetComponent<Rigidbody2D>();
                     if (rb != null)
                     {
-                        // ForceMode2D.Force already applies deltaTime internally, so don't multiply again
-                        Vector2 force = _currentDirection * _currentForce * _continuousForceMultiplier;
+                        Vector2 forceDirection;
+
+                        // Si la souris bouge, utiliser la direction du mouvement
+                        if (_currentDirection.magnitude > 0.01f)
+                        {
+                            forceDirection = _currentDirection;
+                        }
+                        else
+                        {
+                            // Si immobile, repousser vers l'extérieur (depuis le centre du trigger vers la spore)
+                            Vector2 toSpore = (spore.transform.position - transform.position);
+                            forceDirection = toSpore.normalized;
+                        }
+
+                        Vector2 force = forceDirection * _currentForce * _continuousForceMultiplier;
                         rb.AddForce(force, ForceMode2D.Force);
                     }
                 }

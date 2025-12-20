@@ -23,6 +23,11 @@ namespace DarjeelingGameJam.Spores
         [SerializeField]
         private AnimationCurve _spawnCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
+        [Header("Germination Settings")]
+        [Tooltip("Hauteur Y maximale pour germer (min, max) - la spore ne germera que si elle est en dessous de cette valeur")]
+        [SerializeField]
+        private Vector2 _germinationYRange = new Vector2(-1f, 0.5f);
+
         private Rigidbody2D _rigidbody;
         private SpriteRenderer _spriteRenderer;
         private MaterialPropertyBlock _propertyBlock;
@@ -32,6 +37,7 @@ namespace DarjeelingGameJam.Spores
         private Color _targetEmissionColor;
         private Color _targetAlbedoColor;
         private Vector3 _targetScale;
+        private float _germinationYThreshold;
 
         public bool IsDetached { get; private set; }
 
@@ -39,6 +45,9 @@ namespace DarjeelingGameJam.Spores
         {
             _rigidbody = GetComponent<Rigidbody2D>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
+
+            // Déterminer la hauteur Y maximale de germination pour cette spore
+            _germinationYThreshold = UnityEngine.Random.Range(_germinationYRange.x, _germinationYRange.y);
 
             // Sauvegarder les valeurs cibles avant de commencer l'animation
             if (_spriteRenderer != null)
@@ -137,14 +146,17 @@ namespace DarjeelingGameJam.Spores
         {
             if (other.gameObject.CompareTag("Ground"))
             {
-                var closestPoint = other.collider.ClosestPoint(transform.position);
-                Germinate(closestPoint);
+                // Vérifier si la spore est assez basse pour germer
+                if (transform.position.y <= _germinationYThreshold)
+                {
+                    Germinate(transform.position);
+                }
+                // Sinon, ne rien faire - la spore continue de bouger jusqu'à être assez basse
             }
         }
 
-        private void Germinate(Vector2 closestPoint)
+        private void Germinate(Vector2 position)
         {
-            var position = new Vector3(closestPoint.x, closestPoint.y);
             Instantiate(_plant, position, Quaternion.identity);
             Destroy(gameObject);
         }

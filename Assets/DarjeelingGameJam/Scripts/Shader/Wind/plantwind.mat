@@ -52,6 +52,8 @@ Material:
     - _BendIntensity: 1
     - _BlurAmount: 0
     - _BlurMaxRadius: 3.8
+    - _BottomFadeHeight: 0.3
+    - _BottomFadeStrength: 1
     - _ColorWobbleAmount: 0.41
     - _ColorWobbleScale: 0.2
     - _ColorWobbleSpeed: 0.1

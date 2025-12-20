@@ -21,6 +21,10 @@ namespace DarjeelingGameJam.Wind
         [SerializeField]
         private MouseVelocityTracker _velocityTracker;
 
+        [Tooltip("AudioSource pour jouer le son de vent (optionnel)")]
+        [SerializeField]
+        private AudioSource _windAudioSource;
+
         [Header("Trigger Settings")]
         [Tooltip("Taille minimale du trigger (même à l'arrêt)")]
         [MinValue(0.1f)]
@@ -67,6 +71,17 @@ namespace DarjeelingGameJam.Wind
         [MinValue(0f)]
         [SerializeField]
         private float _plantWindDuration = 1f;
+
+        [Header("Wind Sound Settings")]
+        [Tooltip("Vitesse normalisée minimum (0-1) pour jouer le son de vent")]
+        [Range(0f, 1f)]
+        [SerializeField]
+        private float _windSoundSpeedThreshold = 0.7f;
+
+        [Tooltip("Délai minimum (en secondes) avant de pouvoir rejouer le son")]
+        [MinValue(0f)]
+        [SerializeField]
+        private float _windSoundCooldown = 2f;
 
         [Header("Multi-Trails Settings")]
         [Tooltip("Activer les trails multiples")]
@@ -124,6 +139,9 @@ namespace DarjeelingGameJam.Wind
         // Multi-trails
         private TrailRenderer[] _trailInstances;
         private Vector3[] _trailOffsets;
+
+        // Wind sound
+        private float _lastWindSoundTime = -999f;
 
         private void Awake()
         {
@@ -185,6 +203,9 @@ namespace DarjeelingGameJam.Wind
             // Get velocity data
             Vector2 direction = _velocityTracker.GetDirection();
             float velocityNormalized = _velocityTracker.NormalizedSpeed;
+
+            // Check wind sound
+            TryPlayWindSound(velocityNormalized);
 
             // Update wind follower FIRST (move parent before children)
             UpdateFollowerMode(mouseWorldPos, direction, velocityNormalized);
@@ -360,6 +381,34 @@ namespace DarjeelingGameJam.Wind
             {
                 loopEndOfClip.windActive = false;
             }
+        }
+
+        #endregion
+
+        #region Wind Sound
+
+        private void TryPlayWindSound(float velocityNormalized)
+        {
+            // Vérifier si on a un AudioSource assigné
+            if (_windAudioSource == null)
+                return;
+
+            // Vérifier si la vitesse dépasse le seuil
+            if (velocityNormalized < _windSoundSpeedThreshold)
+                return;
+
+            // Vérifier si le son est déjà en train de jouer (pas de superposition)
+            if (_windAudioSource.isPlaying)
+                return;
+
+            // Vérifier le cooldown (délai avant de pouvoir rejouer)
+            float timeSinceLastSound = Time.time - _lastWindSoundTime;
+            if (timeSinceLastSound < _windSoundCooldown)
+                return;
+
+            // Toutes les conditions sont remplies, jouer le son une fois
+            _windAudioSource.PlayOneShot(_windAudioSource.clip);
+            _lastWindSoundTime = Time.time;
         }
 
         #endregion

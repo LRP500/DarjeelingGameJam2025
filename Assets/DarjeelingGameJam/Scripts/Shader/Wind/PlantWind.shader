@@ -35,6 +35,11 @@
 
         // --- Variation de teinte par objet ---
         _TintVariationAmount ("Tint Variation Amount", Range(0,0.5)) = 0.5
+
+        // --- Fade alpha en bas pour ancrage au sol ---
+        _BottomFadeHeight ("Bottom Fade Height", Range(0,1)) = 0.35
+        _BottomFadeStrength ("Bottom Fade Strength", Range(0,1)) = 0.95
+        _BottomFadeCurve ("Bottom Fade Curve", Range(0.1,5)) = 3.0
     }
 
     SubShader
@@ -125,6 +130,10 @@
                 float  _BlurMaxRadius;
 
                 float  _TintVariationAmount;
+
+                float  _BottomFadeHeight;
+                float  _BottomFadeStrength;
+                float  _BottomFadeCurve;
             CBUFFER_END
 
             // === Shape lights ===
@@ -312,6 +321,15 @@
                 float aMask = saturate((dist - tol) / feather);
                 main.a *= aMask;
 
+                // Fade alpha en bas pour ancrage au sol
+                if (_BottomFadeHeight > 0.0001)
+                {
+                    float fadeAmount = saturate(i.uv.y / _BottomFadeHeight);
+                    fadeAmount = pow(fadeAmount, _BottomFadeCurve);  // Courbe exponentielle pour fade plus agressif
+                    fadeAmount = lerp(1.0 - _BottomFadeStrength, 1.0, fadeAmount);
+                    main.a *= fadeAmount;
+                }
+
                 SurfaceData2D surfaceData;
                 InputData2D inputData;
 
@@ -392,6 +410,10 @@
                 float  _BlurMaxRadius;
 
                 float  _TintVariationAmount;
+
+                float  _BottomFadeHeight;
+                float  _BottomFadeStrength;
+                float  _BottomFadeCurve;
             CBUFFER_END
 
             float Hash11(float n)
@@ -525,6 +547,15 @@
                 float aMask = saturate((dist - tol) / feather);
                 mainTex.a *= aMask;
 
+                // Fade alpha en bas pour ancrage au sol
+                if (_BottomFadeHeight > 0.0001)
+                {
+                    float fadeAmount = saturate(i.uv.y / _BottomFadeHeight);
+                    fadeAmount = pow(fadeAmount, _BottomFadeCurve);  // Courbe exponentielle pour fade plus agressif
+                    fadeAmount = lerp(1.0 - _BottomFadeStrength, 1.0, fadeAmount);
+                    mainTex.a *= fadeAmount;
+                }
+
                 return NormalsRenderingShared(mainTex, normalTS, i.tangentWS.xyz, i.bitangentWS.xyz, i.normalWS.xyz);
             }
             ENDHLSL
@@ -601,6 +632,10 @@
                 float  _BlurMaxRadius;
 
                 float  _TintVariationAmount;
+
+                float  _BottomFadeHeight;
+                float  _BottomFadeStrength;
+                float  _BottomFadeCurve;
             CBUFFER_END
 
             float Hash11(float n)
@@ -761,6 +796,15 @@
                 float feather = max(_KeyFeather, 1e-5);
                 float aMask = saturate((dist - tol) / feather);
                 mainTex.a *= aMask;
+
+                // Fade alpha en bas pour ancrage au sol
+                if (_BottomFadeHeight > 0.0001)
+                {
+                    float fadeAmount = saturate(i.uv.y / _BottomFadeHeight);
+                    fadeAmount = pow(fadeAmount, _BottomFadeCurve);  // Courbe exponentielle pour fade plus agressif
+                    fadeAmount = lerp(1.0 - _BottomFadeStrength, 1.0, fadeAmount);
+                    mainTex.a *= fadeAmount;
+                }
 
                 #if defined(DEBUG_DISPLAY)
                     SurfaceData2D surfaceData;

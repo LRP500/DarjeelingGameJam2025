@@ -80,7 +80,7 @@ TrailRenderer:
   m_SortingLayerID: 1311765985
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Time: 2
+  m_Time: 1
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -99,7 +99,7 @@ TrailRenderer:
         outWeight: 0
       - serializedVersion: 3
         time: 0.5020523
-        value: 0.27272797
+        value: 0.12034607
         inSlope: 0
         outSlope: 0
         tangentMode: 0

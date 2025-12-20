@@ -87,9 +87,16 @@ namespace DarjeelingGameJam.Wind
 
         [ShowIf(nameof(_enableMultiTrails))]
         [BoxGroup("Trails")]
-        [Tooltip("Dispersion aléatoire autour de la souris (world units)")]
+        [Tooltip("Offset manuel pour chaque trail (en world units). Laisse vide pour générer aléatoirement.")]
         [SerializeField]
-        private float _trailRandomOffset = 0.3f;
+        private Vector3[] _trailManualOffsets = new Vector3[]
+        {
+            new Vector3(0f, 0f, 0f),      // Trail 0: centre
+            new Vector3(0f, -0.3f, 0f),   // Trail 1: bas
+            new Vector3(0f, 0.3f, 0f),    // Trail 2: haut
+            new Vector3(-0.3f, 0f, 0f),   // Trail 3: gauche
+            new Vector3(0.3f, 0f, 0f)     // Trail 4: droite
+        };
 
         [Header("Common Settings")]
         [Tooltip("Courbe vitesse → effet")]
@@ -179,14 +186,14 @@ namespace DarjeelingGameJam.Wind
             Vector2 direction = _velocityTracker.GetDirection();
             float velocityNormalized = _velocityTracker.NormalizedSpeed;
 
-            // Update multi-trails
+            // Update wind follower FIRST (move parent before children)
+            UpdateFollowerMode(mouseWorldPos, direction, velocityNormalized);
+
+            // Update multi-trails AFTER (trails use localPosition relative to parent)
             if (_enableMultiTrails)
             {
                 UpdateMultiTrails(mouseWorldPos, velocityNormalized);
             }
-
-            // Update wind follower
-            UpdateFollowerMode(mouseWorldPos, direction, velocityNormalized);
         }
 
         #region Wind Physics
@@ -388,10 +395,13 @@ namespace DarjeelingGameJam.Wind
                     // Calculer l'offset avant d'instancier
                     CalculateTrailOffset(i);
 
-                    // Instancier le prefab à la position de la souris + offset
-                    GameObject trailObj = Instantiate(_trailPrefabs[i].gameObject, mouseWorldPos + _trailOffsets[i], Quaternion.identity, transform);
+                    // Instancier le prefab comme enfant (hérite de la position du parent)
+                    GameObject trailObj = Instantiate(_trailPrefabs[i].gameObject, transform);
                     trailObj.name = $"Trail_{i}";
                     _trailInstances[i] = trailObj.GetComponent<TrailRenderer>();
+
+                    // Positionner en local space avec l'offset
+                    _trailInstances[i].transform.localPosition = _trailOffsets[i];
 
                     // Désactiver complètement le trail au début
                     _trailInstances[i].emitting = false;
@@ -403,17 +413,24 @@ namespace DarjeelingGameJam.Wind
 
         private void CalculateTrailOffset(int index)
         {
-            // Le premier trail (index 0) suit exactement la souris, les autres ont un offset
-            if (index == 0)
+            // Utiliser l'offset manuel si défini, sinon générer aléatoirement
+            if (_trailManualOffsets != null && index < _trailManualOffsets.Length)
             {
-                _trailOffsets[index] = Vector3.zero;
+                _trailOffsets[index] = _trailManualOffsets[index];
             }
             else
             {
-                // Offset aléatoire autour de la souris pour les trails supplémentaires
-                float randomX = Random.Range(-_trailRandomOffset, _trailRandomOffset);
-                float randomY = Random.Range(-_trailRandomOffset, _trailRandomOffset);
-                _trailOffsets[index] = new Vector3(randomX, randomY, 0f);
+                // Fallback: le premier trail au centre, les autres aléatoires
+                if (index == 0)
+                {
+                    _trailOffsets[index] = Vector3.zero;
+                }
+                else
+                {
+                    float randomX = Random.Range(-0.3f, 0.3f);
+                    float randomY = Random.Range(-0.3f, 0.3f);
+                    _trailOffsets[index] = new Vector3(randomX, randomY, 0f);
+                }
             }
         }
 
@@ -440,11 +457,8 @@ namespace DarjeelingGameJam.Wind
 
                     _trailInstances[i].emitting = shouldEmit;
 
-                    // Mettre à jour la position si actif
-                    if (shouldEmit)
-                    {
-                        _trailInstances[i].transform.position = mouseWorldPos + _trailOffsets[i];
-                    }
+                    // IMPORTANT: utiliser localPosition car le parent a déjà été déplacé à mouseWorldPos
+                    _trailInstances[i].transform.localPosition = _trailOffsets[i];
                 }
             }
         }

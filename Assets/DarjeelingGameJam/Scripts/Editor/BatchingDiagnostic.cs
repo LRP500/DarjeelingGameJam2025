@@ -33,8 +33,8 @@ public class BatchingDiagnostic : EditorWindow
         Debug.Log("<color=cyan>═══════════════════════════════════════════════════════════════</color>\n");
 
         // Récupérer tous les renderers actifs dans la scène
-        var allRenderers = Object.FindObjectsOfType<Renderer>();
-        var spriteRenderers = Object.FindObjectsOfType<SpriteRenderer>();
+        var allRenderers = Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None);
+        var spriteRenderers = Object.FindObjectsByType<SpriteRenderer>(FindObjectsSortMode.None);
 
         Debug.Log($"<color=yellow>Total Renderers actifs : {allRenderers.Length}</color>");
         Debug.Log($"<color=yellow>Total SpriteRenderers actifs : {spriteRenderers.Length}</color>\n");
@@ -98,13 +98,13 @@ public class BatchingDiagnostic : EditorWindow
         // Analyse spécifique : Plantes
         int plantsWithMaterialProps = 0;
         int plantsWithoutMaterialProps = 0;
-        var plants = Object.FindObjectsOfType<PlantMaterialProperties>();
+        var plants = Object.FindObjectsByType<PlantMaterialProperties>(FindObjectsSortMode.None);
 
         Debug.Log("<color=lime>═══ ANALYSE DES PLANTES ═══</color>");
         Debug.Log($"  Plantes avec PlantMaterialProperties : <color=green>{plants.Length}</color>");
 
         // Compter les plantes sans le composant (celles avec LoopEndOfClip mais pas PlantMaterialProperties)
-        var loopEndOfClips = Object.FindObjectsOfType<LoopEndOfClip>();
+        var loopEndOfClips = Object.FindObjectsByType<LoopEndOfClip>(FindObjectsSortMode.None);
         foreach (var loop in loopEndOfClips)
         {
             var plantMatProps = loop.GetComponentInParent<PlantMaterialProperties>();
@@ -126,7 +126,7 @@ public class BatchingDiagnostic : EditorWindow
         Debug.Log("");
 
         // Analyse spécifique : Spores
-        var spores = Object.FindObjectsOfType<SpriteRenderer>()
+        var spores = Object.FindObjectsByType<SpriteRenderer>(FindObjectsSortMode.None)
             .Where(sr => sr.gameObject.name.ToLower().Contains("spore"))
             .ToList();
 
@@ -151,7 +151,7 @@ public class BatchingDiagnostic : EditorWindow
         Debug.Log("");
 
         // Analyse : Particules
-        var particleSystems = Object.FindObjectsOfType<ParticleSystemRenderer>();
+        var particleSystems = Object.FindObjectsByType<ParticleSystemRenderer>(FindObjectsSortMode.None);
         Debug.Log("<color=lime>═══ ANALYSE DES PARTICULES ═══</color>");
         Debug.Log($"  ParticleSystems actifs : <color=yellow>{particleSystems.Length}</color>");
 

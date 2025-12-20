@@ -12,16 +12,27 @@ namespace DarjeelingGameJam.Plants
         [SerializeField]
         private float _maxRotationY = 10f;
 
+        [Tooltip("Si coché, flip Y au lieu de flip X")]
+        [SerializeField]
+        private bool _useFlipY = false;
+
         private void Awake()
         {
             var scale = Random.Range(_scaleMinMax.x, _scaleMinMax.y);
             transform.localScale = new Vector3(scale, scale, 0);
 
-            // Flip horizontal aléatoire pour plus de variation
+            // Flip aléatoire (X ou Y selon le paramètre)
             var spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             if (spriteRenderer != null)
             {
-                spriteRenderer.flipX = Random.value > 0.5f;
+                if (_useFlipY)
+                {
+                    spriteRenderer.flipY = Random.value > 0.5f;
+                }
+                else
+                {
+                    spriteRenderer.flipX = Random.value > 0.5f;
+                }
             }
 
             // Rotation aléatoire en Y (très légère)

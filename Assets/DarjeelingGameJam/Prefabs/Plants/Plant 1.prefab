@@ -47,8 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9a9dd9782a74eb490048c6a31ee5d85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Plants.Plant
-  _scaleMinMax: {x: 0.4, y: 2}
+  _scaleMinMax: {x: 0.4, y: 1}
   _maxRotationY: 20
+  _useFlipY: 0
 --- !u!114 &6633381508444841441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,10 +74,6 @@ PrefabInstance:
       propertyPath: _spore
       value: 
       objectReference: {fileID: 1277615276391774044, guid: 503bbbae7ec304c4cb4456debe1f67bd, type: 3}
-    - target: {fileID: 3069904263198146337, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
-      propertyPath: _interval
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 7627098494808132320, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.066

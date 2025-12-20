@@ -21,10 +21,6 @@ namespace DarjeelingGameJam.Wind
         [SerializeField]
         private MouseVelocityTracker _velocityTracker;
 
-        [Required]
-        [SerializeField]
-        private WindParticleController _particleController;
-
         [Header("Trigger Settings")]
         [Tooltip("Taille minimale du trigger (même à l'arrêt)")]
         [MinValue(0.1f)]
@@ -74,23 +70,15 @@ namespace DarjeelingGameJam.Wind
 
         [ShowIf(nameof(_enableMultiTrails))]
         [BoxGroup("Trails")]
-        [Tooltip("Nombre max de trails")]
-        [Range(1, 10)]
+        [Tooltip("Prefabs des trails (glissez vos prefabs TrailRenderer avec des looks différents)")]
         [SerializeField]
-        private int _maxTrails = 5;
+        private TrailRenderer[] _trailPrefabs;
 
         [ShowIf(nameof(_enableMultiTrails))]
         [BoxGroup("Trails")]
-        [Tooltip("Trail de référence (copié pour créer les autres)")]
-        [Required]
+        [Tooltip("Vitesse minimale (0-1) pour activer chaque trail. Index 0 = toujours visible, index 1 = apparaît à cette vitesse, etc.")]
         [SerializeField]
-        private TrailRenderer _referenceTrail;
-
-        [ShowIf(nameof(_enableMultiTrails))]
-        [BoxGroup("Trails")]
-        [Tooltip("Courbe : vitesse (0-1) → nombre de trails (0-1). Permet un effet exponentiel.")]
-        [SerializeField]
-        private AnimationCurve _trailSpeedCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        private float[] _trailSpeedThresholds = new float[] { 0f, 0.2f, 0.4f, 0.6f, 0.8f };
 
         [ShowIf(nameof(_enableMultiTrails))]
         [BoxGroup("Trails")]
@@ -121,9 +109,8 @@ namespace DarjeelingGameJam.Wind
         private HashSet<LoopEndOfClip> _plantsInTrigger = new HashSet<LoopEndOfClip>();
 
         // Multi-trails
-        private TrailRenderer[] _trails;
+        private TrailRenderer[] _trailInstances;
         private Vector3[] _trailOffsets;
-        private int _activeTrailCount = 0;
 
         private void Awake()
         {
@@ -142,6 +129,8 @@ namespace DarjeelingGameJam.Wind
             // Configure Rigidbody2D pour qu'il ne soit pas affecté par la physique
             _rigidbody.bodyType = RigidbodyType2D.Kinematic;
             _rigidbody.gravityScale = 0f;
+            // Continuous collision detection pour détecter les collisions même à haute vitesse
+            _rigidbody.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
             if (_enableMultiTrails)
                 InitializeTrailPool();
@@ -162,11 +151,6 @@ namespace DarjeelingGameJam.Wind
             // Get velocity data
             Vector2 direction = _velocityTracker.GetDirection();
             float velocityNormalized = _velocityTracker.NormalizedSpeed;
-            bool isMoving = _velocityTracker.IsMoving;
-
-            // Update particles
-            if (_particleController != null)
-                _particleController.UpdateWindEmission(mouseWorldPos, direction, velocityNormalized, isMoving);
 
             // Update multi-trails
             if (_enableMultiTrails)
@@ -317,71 +301,68 @@ namespace DarjeelingGameJam.Wind
 
         private void InitializeTrailPool()
         {
-            if (_referenceTrail == null)
+            if (_trailPrefabs == null || _trailPrefabs.Length == 0)
             {
-                Debug.LogError("[WindTracer] Reference Trail manquant ! Glissez votre trail existant dans ce champ.", this);
+                Debug.LogWarning("[WindTracer] Aucun prefab de trail assigné ! Glissez vos prefabs TrailRenderer dans le tableau.", this);
                 return;
             }
 
-            _trails = new TrailRenderer[_maxTrails];
-            _trailOffsets = new Vector3[_maxTrails];
+            _trailInstances = new TrailRenderer[_trailPrefabs.Length];
+            _trailOffsets = new Vector3[_trailPrefabs.Length];
 
-            // Le trail 0 est le trail de référence lui-même
-            _trails[0] = _referenceTrail;
-            _trailOffsets[0] = Vector3.zero;
-
-            // Créer les trails supplémentaires comme des copies du trail de référence
-            for (int i = 1; i < _maxTrails; i++)
+            // Instancier chaque prefab de trail et calculer un offset aléatoire
+            for (int i = 0; i < _trailPrefabs.Length; i++)
             {
-                // Dupliquer le GameObject du trail de référence
-                GameObject trailObj = Instantiate(_referenceTrail.gameObject, transform);
-                trailObj.name = $"Trail_{i}";
-
-                _trails[i] = trailObj.GetComponent<TrailRenderer>();
-
-                if (_trails[i] != null)
+                if (_trailPrefabs[i] != null)
                 {
-                    // Calculer un offset aléatoire pour disperser les trails
+                    // Instancier le prefab comme enfant de WindTracer
+                    GameObject trailObj = Instantiate(_trailPrefabs[i].gameObject, transform);
+                    trailObj.name = $"Trail_{i}";
+                    _trailInstances[i] = trailObj.GetComponent<TrailRenderer>();
+
                     CalculateTrailOffset(i);
-                    _trails[i].emitting = false;
+                    _trailInstances[i].emitting = false;
                 }
             }
         }
 
         private void CalculateTrailOffset(int index)
         {
-            // Offset aléatoire autour de la souris
-            float randomX = Random.Range(-_trailRandomOffset, _trailRandomOffset);
-            float randomY = Random.Range(-_trailRandomOffset, _trailRandomOffset);
-            _trailOffsets[index] = new Vector3(randomX, randomY, 0f);
+            // Le premier trail (index 0) suit exactement la souris, les autres ont un offset
+            if (index == 0)
+            {
+                _trailOffsets[index] = Vector3.zero;
+            }
+            else
+            {
+                // Offset aléatoire autour de la souris pour les trails supplémentaires
+                float randomX = Random.Range(-_trailRandomOffset, _trailRandomOffset);
+                float randomY = Random.Range(-_trailRandomOffset, _trailRandomOffset);
+                _trailOffsets[index] = new Vector3(randomX, randomY, 0f);
+            }
         }
 
         private void UpdateMultiTrails(Vector3 mouseWorldPos, float normalizedSpeed)
         {
-            if (_trails == null) return;
+            if (_trailInstances == null || _trailInstances.Length == 0) return;
 
-            // Calculate active trail count using the curve
-            // Utiliser la courbe pour mapper la vitesse au nombre de trails
-            float curveValue = _trailSpeedCurve.Evaluate(normalizedSpeed);
-            int targetTrailCount = Mathf.RoundToInt(Mathf.Lerp(1, _maxTrails, curveValue));
-
-            if (targetTrailCount != _activeTrailCount)
+            // Activer/désactiver chaque trail selon son seuil de vitesse
+            for (int i = 0; i < _trailInstances.Length; i++)
             {
-                _activeTrailCount = targetTrailCount;
-                for (int i = 0; i < _maxTrails; i++)
+                if (_trailInstances[i] != null)
                 {
-                    if (_trails[i] != null)
-                        _trails[i].emitting = i < _activeTrailCount;
-                }
-            }
+                    // Récupérer le seuil pour ce trail (si pas défini, utiliser un défaut)
+                    float threshold = i < _trailSpeedThresholds.Length ? _trailSpeedThresholds[i] : (i * 0.2f);
 
-            // Update positions - dispersion aléatoire autour de la souris
-            for (int i = 0; i < _activeTrailCount; i++)
-            {
-                if (_trails[i] != null)
-                {
-                    // Position = souris + offset aléatoire
-                    _trails[i].transform.position = mouseWorldPos + _trailOffsets[i];
+                    // Activer si la vitesse dépasse le seuil
+                    bool shouldEmit = normalizedSpeed >= threshold;
+                    _trailInstances[i].emitting = shouldEmit;
+
+                    // Mettre à jour la position si actif
+                    if (shouldEmit)
+                    {
+                        _trailInstances[i].transform.position = mouseWorldPos + _trailOffsets[i];
+                    }
                 }
             }
         }
@@ -414,9 +395,18 @@ namespace DarjeelingGameJam.Wind
                 style.normal.textColor = Color.white;
                 style.fontSize = 11;
 
+                int activeTrails = 0;
+                if (_trailInstances != null)
+                {
+                    foreach (var trail in _trailInstances)
+                    {
+                        if (trail != null && trail.emitting) activeTrails++;
+                    }
+                }
+
                 string stats = $"Radius: {_currentRadius:F2}\n" +
                               $"Force: {_currentForce:F2}\n" +
-                              $"Trails: {_activeTrailCount}/{_maxTrails}\n" +
+                              $"Trails: {activeTrails}/{(_trailInstances != null ? _trailInstances.Length : 0)}\n" +
                               $"Spores: {_sporesInTrigger.Count}";
 
                 UnityEditor.Handles.Label(transform.position + Vector3.up * (_currentRadius + 0.5f), stats, style);

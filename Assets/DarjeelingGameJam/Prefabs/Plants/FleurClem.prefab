@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 599769630432046686, guid: b97d107a8c4ee43ada69719e7ac02dac, type: 3}
       propertyPath: _scaleMinMax.y
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3250689100205710635, guid: b97d107a8c4ee43ada69719e7ac02dac, type: 3}
       propertyPath: m_LocalPosition.x
@@ -117,10 +117,6 @@ PrefabInstance:
       propertyPath: _spore
       value: 
       objectReference: {fileID: 1277615276391774044, guid: d28379ec1cae3594c88a50f7216c32e0, type: 3}
-    - target: {fileID: 3069904263198146337, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
-      propertyPath: _interval
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 7627098494808132320, guid: ec2477f2b41e24a14b359e616e3d52b7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.066

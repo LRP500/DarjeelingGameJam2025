@@ -57,6 +57,11 @@ namespace DarjeelingGameJam.Wind
         [SerializeField]
         private float _upwardBias = 0.5f;
 
+        [Tooltip("Angle aléatoire maximal ajouté à la direction (en degrés, pour disperser les spores)")]
+        [Range(0f, 45f)]
+        [SerializeField]
+        private float _maxDirectionalVariation = 15f;
+
         [Header("Plant Wind Settings")]
         [Tooltip("Durée pendant laquelle le vent reste actif après que la plante sorte du trigger (évite le clignotement)")]
         [MinValue(0f)]
@@ -225,9 +230,25 @@ namespace DarjeelingGameJam.Wind
                             forceDirection = toSpore.normalized;
                         }
 
-                        // Ajouter un biais vertical vers le haut
-                        forceDirection.y += _upwardBias;
+                        // Ajouter un biais vertical vers le haut, modulé par la position verticale
+                        // Plus on est haut à l'écran, moins le bias est fort
+                        float sporeScreenY = _camera.WorldToViewportPoint(spore.transform.position).y;
+                        float upwardBiasMultiplier = Mathf.Clamp01(1f - sporeScreenY); // 1 en bas, 0 en haut
+                        forceDirection.y += _upwardBias * upwardBiasMultiplier;
                         forceDirection.Normalize();
+
+                        // Ajouter une variation angulaire aléatoire pour disperser les spores
+                        if (_maxDirectionalVariation > 0f)
+                        {
+                            float randomAngle = Random.Range(-_maxDirectionalVariation, _maxDirectionalVariation);
+                            float angleRad = randomAngle * Mathf.Deg2Rad;
+                            float cos = Mathf.Cos(angleRad);
+                            float sin = Mathf.Sin(angleRad);
+                            forceDirection = new Vector2(
+                                forceDirection.x * cos - forceDirection.y * sin,
+                                forceDirection.x * sin + forceDirection.y * cos
+                            );
+                        }
 
                         Vector2 force = forceDirection * _currentForce * _continuousForceMultiplier;
                         rb.AddForce(force, ForceMode2D.Force);
@@ -287,7 +308,24 @@ namespace DarjeelingGameJam.Wind
                 {
                     Rigidbody2D rb = other.attachedRigidbody;
                     if (rb != null)
-                        rb.AddForce(_currentDirection * _currentForce, ForceMode2D.Impulse);
+                    {
+                        Vector2 forceDirection = _currentDirection;
+
+                        // Ajouter une variation angulaire aléatoire pour disperser les spores
+                        if (_maxDirectionalVariation > 0f)
+                        {
+                            float randomAngle = Random.Range(-_maxDirectionalVariation, _maxDirectionalVariation);
+                            float angleRad = randomAngle * Mathf.Deg2Rad;
+                            float cos = Mathf.Cos(angleRad);
+                            float sin = Mathf.Sin(angleRad);
+                            forceDirection = new Vector2(
+                                forceDirection.x * cos - forceDirection.y * sin,
+                                forceDirection.x * sin + forceDirection.y * cos
+                            );
+                        }
+
+                        rb.AddForce(forceDirection * _currentForce, ForceMode2D.Impulse);
+                    }
                 }
             }
         }

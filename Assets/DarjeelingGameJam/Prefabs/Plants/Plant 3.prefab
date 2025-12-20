@@ -182,6 +182,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Plantebranche Renderer
       objectReference: {fileID: 0}
+    - target: {fileID: 7897403305097521159, guid: 2752caec8c0b5464aa474cadbd22475b, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

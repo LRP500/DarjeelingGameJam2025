@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 6012668577611274098}
   - component: {fileID: 7530793968620362733}
   - component: {fileID: 1909929092116473868}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: herbe (7)
   m_TagString: Plant
   m_Icon: {fileID: 0}

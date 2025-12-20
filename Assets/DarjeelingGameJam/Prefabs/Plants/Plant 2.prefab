@@ -150,6 +150,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Plant2 Renderer
       objectReference: {fileID: 0}
+    - target: {fileID: 6507897279012895465, guid: b56cd83ff29b5da4ca015492934a9c08, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 8769445961866995125, guid: b56cd83ff29b5da4ca015492934a9c08, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.53

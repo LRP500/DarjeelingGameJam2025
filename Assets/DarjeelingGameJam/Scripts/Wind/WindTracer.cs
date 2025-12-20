@@ -56,6 +56,11 @@ namespace DarjeelingGameJam.Wind
         [SerializeField]
         private float _continuousForceMultiplier = 1.5f;
 
+        [Tooltip("Biais vertical vers le haut (0 = neutre, 1 = toujours monter)")]
+        [Range(0f, 2f)]
+        [SerializeField]
+        private float _upwardBias = 0.5f;
+
         [Header("Plant Wind Settings")]
         [Tooltip("Durée pendant laquelle le vent reste actif après que la plante sorte du trigger (évite le clignotement)")]
         [MinValue(0f)]
@@ -213,6 +218,10 @@ namespace DarjeelingGameJam.Wind
                             Vector2 toSpore = (spore.transform.position - transform.position);
                             forceDirection = toSpore.normalized;
                         }
+
+                        // Ajouter un biais vertical vers le haut
+                        forceDirection.y += _upwardBias;
+                        forceDirection.Normalize();
 
                         Vector2 force = forceDirection * _currentForce * _continuousForceMultiplier;
                         rb.AddForce(force, ForceMode2D.Force);

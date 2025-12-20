@@ -68,7 +68,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8031026930235321825}
   - component: {fileID: 1318135463451407750}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: fleurFlashRose01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

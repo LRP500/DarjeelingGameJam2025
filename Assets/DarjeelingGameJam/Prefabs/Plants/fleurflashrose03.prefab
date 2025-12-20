@@ -192,6 +192,10 @@ PrefabInstance:
       value: fleurflashrose03
       objectReference: {fileID: 0}
     - target: {fileID: 3093704831989248180, guid: 2d18851672a61c048be8b522129225e6, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 3093704831989248180, guid: 2d18851672a61c048be8b522129225e6, type: 3}
       propertyPath: m_TagString
       value: Plant
       objectReference: {fileID: 0}

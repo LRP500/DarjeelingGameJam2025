@@ -68,14 +68,14 @@ public class LoopEndOfClip : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("[LoopEndOfClip] Pas d'AnimationClip trouvé dans le RuntimeAnimatorController. Le comportement de loop d'anim sera désactivé, seul le shader de vent sera piloté.");
+                // Pas d'AnimationClip trouvé - seul le shader de vent sera piloté
                 _animator = null;
                 _clip = null;
             }
         }
         else
         {
-            Debug.LogWarning("[LoopEndOfClip] Aucun Animator trouvé, seul le shader de vent sera piloté.");
+            // Aucun Animator trouvé - seul le shader de vent sera piloté
         }
 
         // Chercher PlantMaterialProperties sur cet objet ou dans le parent

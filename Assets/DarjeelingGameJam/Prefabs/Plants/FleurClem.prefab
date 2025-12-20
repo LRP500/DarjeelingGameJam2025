@@ -9,6 +9,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 599769630432046686, guid: b97d107a8c4ee43ada69719e7ac02dac, type: 3}
+      propertyPath: _maxRotationY
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 599769630432046686, guid: b97d107a8c4ee43ada69719e7ac02dac, type: 3}
       propertyPath: _scaleMinMax.x
       value: 0.4
       objectReference: {fileID: 0}

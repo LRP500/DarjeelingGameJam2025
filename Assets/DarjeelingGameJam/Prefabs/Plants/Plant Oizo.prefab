@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Plants.Plant
   _scaleMinMax: {x: 0.4, y: 2}
+  _maxRotationY: 20
 --- !u!114 &3112367403433651020
 MonoBehaviour:
   m_ObjectHideFlags: 0

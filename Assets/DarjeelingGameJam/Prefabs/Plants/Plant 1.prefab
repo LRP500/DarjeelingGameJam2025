@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Plants.Plant
   _scaleMinMax: {x: 0.4, y: 2}
+  _maxRotationY: 20
 --- !u!114 &6633381508444841441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,6 +185,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2710212783712994217, guid: 309e045d56e6f0d4aab1886f9556471c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6799408284222417939, guid: 309e045d56e6f0d4aab1886f9556471c, type: 3}
+      propertyPath: m_SortingOrder
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

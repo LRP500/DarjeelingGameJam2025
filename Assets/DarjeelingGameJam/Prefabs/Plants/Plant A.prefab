@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3250689100205710635}
   - component: {fileID: 599769630432046686}
+  - component: {fileID: 7504595143791287771}
   m_Layer: 0
   m_Name: Plant A
   m_TagString: Untagged
@@ -47,6 +48,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Plants.Plant
   _scaleMinMax: {x: 0.4, y: 2}
+--- !u!114 &7504595143791287771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4961223910506686933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72e44c7f6da2a4a459335b8ed5f66be7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlantMaterialProperties
 --- !u!1001 &508276635562652406
 PrefabInstance:
   m_ObjectHideFlags: 0

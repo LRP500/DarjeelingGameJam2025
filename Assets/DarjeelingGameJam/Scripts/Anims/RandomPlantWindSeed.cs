@@ -1,6 +1,9 @@
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
+/// <summary>
+/// Définit une seed aléatoire pour varier l'animation de vent de chaque plante.
+/// Cherche PlantMaterialProperties sur cet objet ou dans le parent.
+/// </summary>
 public class RandomPlantWindSeed : MonoBehaviour
 {
     [Tooltip("Minimum pour _RandomSeed")]
@@ -11,16 +14,16 @@ public class RandomPlantWindSeed : MonoBehaviour
 
     void Awake()
     {
-        var sr = GetComponent<SpriteRenderer>();
-        if (sr == null)
+        // Chercher PlantMaterialProperties sur cet objet ou dans le parent
+        var materialProps = GetComponentInParent<PlantMaterialProperties>();
+        if (materialProps == null)
+        {
+            Debug.LogWarning("[RandomPlantWindSeed] PlantMaterialProperties manquant sur " + gameObject.name + " ou son parent", this);
             return;
-
-        // .material = instance du material (�vite de modifier le shared pour tout le monde)
-        var mat = sr.material;
-        if (mat == null || !mat.HasProperty("_RandomSeed"))
-            return;
+        }
 
         float seed = Random.Range(minSeed, maxSeed);
-        mat.SetFloat("_RandomSeed", seed);
+        materialProps.SetRandomSeed(seed);
+        materialProps.Apply();
     }
 }

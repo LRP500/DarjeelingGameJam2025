@@ -50,7 +50,7 @@ Material:
     - _BaseWindStrength: 1
     - _BendByHeight: 0.5
     - _BendIntensity: 1
-    - _BlurAmount: 0.4
+    - _BlurAmount: 0
     - _BlurMaxRadius: 7.5
     - _ColorWobbleAmount: 0.41
     - _ColorWobbleScale: 0.2

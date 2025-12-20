@@ -36,9 +36,7 @@ public class LoopEndOfClip : MonoBehaviour
 
     private const float LoopSpeed = 1f;
 
-    private SpriteRenderer _spriteRenderer;
-    private Material _plantMaterial;
-    private static readonly int EnableWindID = Shader.PropertyToID("_EnableWind");
+    private PlantMaterialProperties _materialProps;
 
     private int _previousLoopLastFrames;
 
@@ -80,14 +78,11 @@ public class LoopEndOfClip : MonoBehaviour
             Debug.LogWarning("[LoopEndOfClip] Aucun Animator trouvé, seul le shader de vent sera piloté.");
         }
 
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        if (_spriteRenderer != null)
+        // Chercher PlantMaterialProperties sur cet objet ou dans le parent
+        _materialProps = GetComponentInParent<PlantMaterialProperties>();
+        if (_materialProps == null)
         {
-            _plantMaterial = _spriteRenderer.material;
-        }
-        else
-        {
-            Debug.LogWarning("[LoopEndOfClip] Aucun SpriteRenderer trouvé, le shader PlantWind ne sera pas piloté.");
+            Debug.LogWarning("[LoopEndOfClip] PlantMaterialProperties manquant sur " + gameObject.name + " ou son parent, le shader PlantWind ne sera pas piloté.", this);
         }
     }
 
@@ -189,10 +184,10 @@ public class LoopEndOfClip : MonoBehaviour
 
     private void ApplyWindToMaterial()
     {
-        if (_plantMaterial == null)
+        if (_materialProps == null)
             return;
 
-        _plantMaterial.SetFloat(EnableWindID, _enableWindCurrent);
+        _materialProps.SetEnableWind(_enableWindCurrent);
     }
 
     private void CheckGrowthFinished()

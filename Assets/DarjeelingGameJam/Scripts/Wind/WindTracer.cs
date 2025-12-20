@@ -103,6 +103,7 @@ namespace DarjeelingGameJam.Wind
         private Vector2 _currentDirection;
         private float _currentForce;
         private float _currentRadius;
+        private bool _initialized = false;
 
         // Spores and plants tracking
         private HashSet<Spore> _sporesInTrigger = new HashSet<Spore>();
@@ -126,19 +127,40 @@ namespace DarjeelingGameJam.Wind
 
             _circleCollider.isTrigger = true;
 
+            // Désactiver le collider au début pour éviter les collisions pendant l'initialisation
+            _circleCollider.enabled = false;
+
             // Configure Rigidbody2D pour qu'il ne soit pas affecté par la physique
             _rigidbody.bodyType = RigidbodyType2D.Kinematic;
             _rigidbody.gravityScale = 0f;
             // Continuous collision detection pour détecter les collisions même à haute vitesse
             _rigidbody.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
+            // Initialiser la taille et la force au minimum
+            _currentRadius = _minTriggerRadius;
+            _circleCollider.radius = _currentRadius;
+            _currentForce = _minForce;
+            _currentDirection = Vector2.zero;
+        }
+
+        private async void Start()
+        {
+            // Attendre un court délai pour que tout soit bien initialisé
+            await Task.Delay(100);
+
             if (_enableMultiTrails)
                 InitializeTrailPool();
+
+            // Attendre 2 secondes avant d'activer le système
+            await Task.Delay(2000);
+
+            _initialized = true;
+            _circleCollider.enabled = true;
         }
 
         private void Update()
         {
-            if (_velocityTracker == null)
+            if (!_initialized || _velocityTracker == null)
                 return;
 
             // Get mouse position
@@ -180,7 +202,7 @@ namespace DarjeelingGameJam.Wind
             _currentDirection = direction;
 
             // Apply continuous force
-            if (_continuousForce)
+            if (_continuousForce && _initialized)
             {
                 foreach (var spore in _sporesInTrigger)
                 {
@@ -261,7 +283,7 @@ namespace DarjeelingGameJam.Wind
             {
                 _sporesInTrigger.Add(spore);
 
-                if (!_continuousForce)
+                if (!_continuousForce && _initialized)
                 {
                     Rigidbody2D rb = other.attachedRigidbody;
                     if (rb != null)
@@ -310,18 +332,33 @@ namespace DarjeelingGameJam.Wind
             _trailInstances = new TrailRenderer[_trailPrefabs.Length];
             _trailOffsets = new Vector3[_trailPrefabs.Length];
 
+            // Obtenir la position initiale de la souris
+            Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
+            Vector3 mouseWorldPos = _camera.ScreenToWorldPoint(
+                new Vector3(mouseScreenPos.x, mouseScreenPos.y, _camera.nearClipPlane)
+            );
+            mouseWorldPos.z = 0;
+
+            // Positionner le WindTracer à la position de la souris dès le début
+            transform.position = mouseWorldPos;
+
             // Instancier chaque prefab de trail et calculer un offset aléatoire
             for (int i = 0; i < _trailPrefabs.Length; i++)
             {
                 if (_trailPrefabs[i] != null)
                 {
-                    // Instancier le prefab comme enfant de WindTracer
-                    GameObject trailObj = Instantiate(_trailPrefabs[i].gameObject, transform);
+                    // Calculer l'offset avant d'instancier
+                    CalculateTrailOffset(i);
+
+                    // Instancier le prefab à la position de la souris + offset
+                    GameObject trailObj = Instantiate(_trailPrefabs[i].gameObject, mouseWorldPos + _trailOffsets[i], Quaternion.identity, transform);
                     trailObj.name = $"Trail_{i}";
                     _trailInstances[i] = trailObj.GetComponent<TrailRenderer>();
 
-                    CalculateTrailOffset(i);
+                    // Désactiver complètement le trail au début
                     _trailInstances[i].emitting = false;
+                    _trailInstances[i].enabled = false;
+                    _trailInstances[i].Clear();
                 }
             }
         }
@@ -356,6 +393,13 @@ namespace DarjeelingGameJam.Wind
 
                     // Activer si la vitesse dépasse le seuil
                     bool shouldEmit = normalizedSpeed >= threshold;
+
+                    // Réactiver le renderer si nécessaire
+                    if (shouldEmit && !_trailInstances[i].enabled)
+                    {
+                        _trailInstances[i].enabled = true;
+                    }
+
                     _trailInstances[i].emitting = shouldEmit;
 
                     // Mettre à jour la position si actif

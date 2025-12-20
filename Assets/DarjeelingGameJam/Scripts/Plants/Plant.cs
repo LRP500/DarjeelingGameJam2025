@@ -38,6 +38,13 @@ namespace DarjeelingGameJam.Plants
             // Rotation aléatoire en Y (très légère)
             float randomRotationY = Random.Range(-_maxRotationY, _maxRotationY);
             transform.rotation = Quaternion.Euler(0, randomRotationY, 0);
+
+            // Assigner une seed aléatoire pour la variation de teinte dans le shader
+            var plantMaterialProperties = GetComponent<PlantMaterialProperties>();
+            if (plantMaterialProperties != null)
+            {
+                plantMaterialProperties.SetRandomSeed(Random.Range(0f, 1000f));
+            }
         }
     }
 }

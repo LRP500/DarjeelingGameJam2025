@@ -23,6 +23,12 @@ namespace DarjeelingGameJam.Spores
         [SerializeField]
         private AnimationCurve _spawnCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
+        [Header("Physics Settings")]
+        [Tooltip("Variation aléatoire de la gravité autour de la valeur du prefab (ex: 0.02 = +/- 20%)")]
+        [MinValue(0f)]
+        [SerializeField]
+        private float _gravityVariation = 0.02f;
+
         [Header("Germination Settings")]
         [Tooltip("Profondeur de pénétration dans le ground (0 = surface, 1 = fond du ground)")]
         [SerializeField]
@@ -56,6 +62,11 @@ namespace DarjeelingGameJam.Spores
 
             // Optimisation: Discrete collision detection (moins précis mais beaucoup plus rapide)
             _rigidbody.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+
+            // Appliquer une variation aléatoire légère de la gravité autour de la valeur du prefab
+            float baseGravity = _rigidbody.gravityScale; // Récupère la gravité du prefab (ex: 0.1)
+            float randomVariation = UnityEngine.Random.Range(-_gravityVariation, _gravityVariation); // ex: -0.02 à +0.02
+            _rigidbody.gravityScale = baseGravity + randomVariation; // ex: 0.08 à 0.12
 
             // Déterminer le ratio de pénétration aléatoire pour cette spore
             _germinationDepthRatio = UnityEngine.Random.Range(_germinationDepthRange.x, _germinationDepthRange.y);

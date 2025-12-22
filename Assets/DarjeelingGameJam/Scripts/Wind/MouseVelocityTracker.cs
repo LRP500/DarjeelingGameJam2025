@@ -16,13 +16,13 @@ namespace DarjeelingGameJam.Wind
         private int _velocitySmoothFrames = 5;
 
         [Header("Thresholds")]
-        [Tooltip("Minimum speed in pixels/second to register as movement")]
+        [Tooltip("Minimum speed in world units/second to register as movement")]
         [SerializeField]
-        private float _minSpeedThreshold = 30f;
+        private float _minSpeedThreshold = 0.5f;
 
-        [Tooltip("Maximum speed in pixels/second for normalization")]
+        [Tooltip("Maximum speed in world units/second for normalization")]
         [SerializeField]
-        private float _maxSpeedClamp = 1500f;
+        private float _maxSpeedClamp = 30f;
 
         private Camera _camera;
         private Vector2 _previousMousePosition;
@@ -39,7 +39,7 @@ namespace DarjeelingGameJam.Wind
         public Vector2 CurrentVelocityWorld { get; private set; }
 
         /// <summary>
-        /// Current speed magnitude in pixels/second
+        /// Current speed magnitude in world units/second
         /// </summary>
         public float Speed { get; private set; }
 
@@ -88,10 +88,8 @@ namespace DarjeelingGameJam.Wind
             }
             smoothedVelocity /= _velocityHistory.Count;
 
-            // Update properties
+            // Update screen velocity
             CurrentVelocityScreen = smoothedVelocity;
-            Speed = smoothedVelocity.magnitude;
-            NormalizedSpeed = Mathf.Clamp01(Speed / _maxSpeedClamp);
 
             // Convert to world space
             Vector2 screenPoint1 = _previousMousePosition;
@@ -101,6 +99,10 @@ namespace DarjeelingGameJam.Wind
             Vector3 worldPoint2 = _camera.ScreenToWorldPoint(new Vector3(screenPoint2.x, screenPoint2.y, _camera.nearClipPlane));
 
             CurrentVelocityWorld = ((Vector2)(worldPoint2 - worldPoint1)) / Time.deltaTime;
+
+            // Calculate speed and normalization based on WORLD space (indépendant de la résolution)
+            Speed = CurrentVelocityWorld.magnitude;
+            NormalizedSpeed = Mathf.Clamp01(Speed / _maxSpeedClamp);
 
             // Update previous position
             _previousMousePosition = currentMousePosition;

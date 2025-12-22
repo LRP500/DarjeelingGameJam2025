@@ -1165,11 +1165,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _maxForce
-      value: 1.2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _minForce
-      value: 0.6
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _maxTrails
@@ -1297,11 +1297,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: '_trailSpeedThresholds.Array.data[1]'
-      value: 0.2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: '_trailSpeedThresholds.Array.data[2]'
-      value: 0.3
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: '_trailSpeedThresholds.Array.data[3]'
@@ -1863,11 +1863,11 @@ PrefabInstance:
       objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 7224205244413429689, guid: 0b83c49d7a4fa46d19378391ff387082, type: 3}
       propertyPath: m_LocalScale.y
-      value: 7.9507117
+      value: 6.1562023
       objectReference: {fileID: 0}
     - target: {fileID: 7224205244413429689, guid: 0b83c49d7a4fa46d19378391ff387082, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7.4825
+      value: -6.5852
       objectReference: {fileID: 0}
     - target: {fileID: 7224205244413429689, guid: 0b83c49d7a4fa46d19378391ff387082, type: 3}
       propertyPath: m_LocalPosition.z

@@ -148,6 +148,8 @@ namespace DarjeelingGameJam.Wind
         private Vector3[] _trailOffsets;
         private float[] _trailCurrentAlpha; // Alpha courant de chaque trail pour smooth fade
         private Gradient[] _trailOriginalGradient; // Gradient original de chaque trail
+        private Gradient[] _trailCachedGradient; // Gradient réutilisable pour éviter les allocations
+        private GradientAlphaKey[][] _trailCachedAlphaKeys; // Alpha keys réutilisables
 
         // Wind sound
         private float _lastWindSoundTime = -999f;
@@ -449,6 +451,8 @@ namespace DarjeelingGameJam.Wind
             _trailOffsets = new Vector3[_trailPrefabs.Length];
             _trailCurrentAlpha = new float[_trailPrefabs.Length];
             _trailOriginalGradient = new Gradient[_trailPrefabs.Length];
+            _trailCachedGradient = new Gradient[_trailPrefabs.Length];
+            _trailCachedAlphaKeys = new GradientAlphaKey[_trailPrefabs.Length][];
 
             // Obtenir la position initiale de la souris
             Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
@@ -483,15 +487,17 @@ namespace DarjeelingGameJam.Wind
                     // Initialiser l'alpha à 0 (invisible)
                     _trailCurrentAlpha[i] = 0f;
 
-                    // Créer un gradient avec alpha = 0 pour rendre invisible au début
-                    Gradient invisibleGradient = new Gradient();
-                    GradientAlphaKey[] alphaKeys = new GradientAlphaKey[_trailOriginalGradient[i].alphaKeys.Length];
-                    for (int k = 0; k < alphaKeys.Length; k++)
+                    // Créer les gradients et alpha keys cachés (alloués une seule fois)
+                    _trailCachedGradient[i] = new Gradient();
+                    _trailCachedAlphaKeys[i] = new GradientAlphaKey[_trailOriginalGradient[i].alphaKeys.Length];
+
+                    // Initialiser les alpha keys à 0 (invisible au début)
+                    for (int k = 0; k < _trailCachedAlphaKeys[i].Length; k++)
                     {
-                        alphaKeys[k] = new GradientAlphaKey(0f, _trailOriginalGradient[i].alphaKeys[k].time);
+                        _trailCachedAlphaKeys[i][k] = new GradientAlphaKey(0f, _trailOriginalGradient[i].alphaKeys[k].time);
                     }
-                    invisibleGradient.SetKeys(_trailOriginalGradient[i].colorKeys, alphaKeys);
-                    _trailInstances[i].colorGradient = invisibleGradient;
+                    _trailCachedGradient[i].SetKeys(_trailOriginalGradient[i].colorKeys, _trailCachedAlphaKeys[i]);
+                    _trailInstances[i].colorGradient = _trailCachedGradient[i];
 
                     // Activer le trail dès le début
                     _trailInstances[i].emitting = true;
@@ -551,20 +557,17 @@ namespace DarjeelingGameJam.Wind
                     // Lerp smooth de l'alpha actuel vers l'alpha cible
                     _trailCurrentAlpha[i] = Mathf.Lerp(_trailCurrentAlpha[i], targetAlpha, _trailFadeSpeed);
 
-                    // Créer un nouveau gradient avec l'alpha modulé
-                    Gradient newGradient = new Gradient();
-                    GradientAlphaKey[] newAlphaKeys = new GradientAlphaKey[_trailOriginalGradient[i].alphaKeys.Length];
-                    for (int k = 0; k < newAlphaKeys.Length; k++)
+                    // Modifier les alpha keys existants (pas d'allocation)
+                    for (int k = 0; k < _trailCachedAlphaKeys[i].Length; k++)
                     {
                         // Multiplier l'alpha original par l'alpha courant
                         float originalAlpha = _trailOriginalGradient[i].alphaKeys[k].alpha;
-                        newAlphaKeys[k] = new GradientAlphaKey(
-                            originalAlpha * _trailCurrentAlpha[i],
-                            _trailOriginalGradient[i].alphaKeys[k].time
-                        );
+                        _trailCachedAlphaKeys[i][k].alpha = originalAlpha * _trailCurrentAlpha[i];
                     }
-                    newGradient.SetKeys(_trailOriginalGradient[i].colorKeys, newAlphaKeys);
-                    _trailInstances[i].colorGradient = newGradient;
+
+                    // Mettre à jour le gradient (réutilise le gradient caché)
+                    _trailCachedGradient[i].SetKeys(_trailOriginalGradient[i].colorKeys, _trailCachedAlphaKeys[i]);
+                    _trailInstances[i].colorGradient = _trailCachedGradient[i];
 
                     // Garder le trail toujours actif pour éviter les coupures
                     _trailInstances[i].emitting = true;

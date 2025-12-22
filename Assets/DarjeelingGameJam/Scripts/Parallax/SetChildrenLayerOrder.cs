@@ -1,4 +1,3 @@
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace DarjeelingGameJam.Parallax
@@ -11,7 +10,10 @@ namespace DarjeelingGameJam.Parallax
         private void Awake()
         {
             var renderers = GetComponentsInChildren<Renderer>();
-            renderers.ForEach(x => x.sortingOrder = _orderInLayer);
+            foreach (var renderer in renderers)
+            {
+                renderer.sortingOrder = _orderInLayer;
+            }
         }
     }
 }

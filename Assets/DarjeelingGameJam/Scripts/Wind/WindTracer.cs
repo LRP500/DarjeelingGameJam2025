@@ -98,7 +98,7 @@ namespace DarjeelingGameJam.Wind
         [BoxGroup("Trails")]
         [Tooltip("Vitesse minimale (0-1) pour activer chaque trail. Index 0 = toujours visible, index 1 = apparaît à cette vitesse, etc.")]
         [SerializeField]
-        private float[] _trailSpeedThresholds = new float[] { 0f, 0.2f, 0.4f, 0.6f, 0.8f };
+        private float[] _trailSpeedThresholds = new float[] { 0f, 0.1f, 0.2f, 0.3f, 0.4f };
 
         [ShowIf(nameof(_enableMultiTrails))]
         [BoxGroup("Trails")]

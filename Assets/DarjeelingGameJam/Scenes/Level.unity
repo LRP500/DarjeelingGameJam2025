@@ -149,7 +149,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 95b5fe359e8a7a64f861fb82f661e0e2, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.504
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -878,6 +878,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1386015774 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8047066398736304255, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
+  m_PrefabInstance: {fileID: 3025699986872831898}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1386015781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1386015774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fa0d8f2f0925c3449f4c8837c5e544c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.CustomCursor
 --- !u!1 &1736178261
 GameObject:
   m_ObjectHideFlags: 0
@@ -1165,11 +1182,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _maxForce
-      value: 1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _minForce
-      value: 0.2
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _maxTrails
@@ -1260,6 +1277,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
+      propertyPath: _windSoundSpeedThreshold
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _continuousForceMultiplier
       value: 1
       objectReference: {fileID: 0}
@@ -1297,11 +1318,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: '_trailSpeedThresholds.Array.data[1]'
-      value: 0.1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: '_trailSpeedThresholds.Array.data[2]'
-      value: 0.2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: '_trailSpeedThresholds.Array.data[3]'
@@ -1346,6 +1367,10 @@ PrefabInstance:
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _trailSpeedCurve.m_Curve.Array.data[1].tangentMode
       value: 34
+      objectReference: {fileID: 0}
+    - target: {fileID: 6650400513954399097, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
+      propertyPath: _maxSpeedClamp
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6650400513954399097, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _minSpeedThreshold
@@ -1524,7 +1549,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8047066398736304255, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1386015781}
   m_SourcePrefab: {fileID: 100100000, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
 --- !u!1001 &5369964880631767882
 PrefabInstance:

@@ -24,9 +24,14 @@ namespace DarjeelingGameJam.Spores
         private AnimationCurve _spawnCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
         [Header("Germination Settings")]
-        [Tooltip("Hauteur Y maximale pour germer (min, max) - la spore ne germera que si elle est en dessous de cette valeur")]
+        [Tooltip("Profondeur de pénétration dans le ground (0 = surface, 1 = fond du ground)")]
         [SerializeField]
-        private Vector2 _germinationYRange = new Vector2(-1f, 0.5f);
+        private Vector2 _germinationDepthRange = new Vector2(0.1f, 0.9f);
+
+        [Tooltip("Délai (en secondes) après détachement avant de pouvoir germer")]
+        [MinValue(0f)]
+        [SerializeField]
+        private float _germinationDelay = 1f;
 
         private Rigidbody2D _rigidbody;
         private SpriteRenderer _spriteRenderer;
@@ -37,7 +42,10 @@ namespace DarjeelingGameJam.Spores
         private Color _targetEmissionColor;
         private Color _targetAlbedoColor;
         private Vector3 _targetScale;
-        private float _germinationYThreshold;
+        private float _germinationDepthRatio; // Ratio de pénétration (0-1)
+        private float _germinationYThreshold; // Y absolu calculé depuis le ground
+        private bool _germinationYCalculated = false;
+        private bool _canGerminate = false;
 
         public bool IsDetached { get; private set; }
 
@@ -46,8 +54,11 @@ namespace DarjeelingGameJam.Spores
             _rigidbody = GetComponent<Rigidbody2D>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
 
-            // Déterminer la hauteur Y maximale de germination pour cette spore
-            _germinationYThreshold = UnityEngine.Random.Range(_germinationYRange.x, _germinationYRange.y);
+            // Optimisation: Discrete collision detection (moins précis mais beaucoup plus rapide)
+            _rigidbody.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+
+            // Déterminer le ratio de pénétration aléatoire pour cette spore
+            _germinationDepthRatio = UnityEngine.Random.Range(_germinationDepthRange.x, _germinationDepthRange.y);
 
             // Sauvegarder les valeurs cibles avant de commencer l'animation
             if (_spriteRenderer != null)
@@ -140,18 +151,46 @@ namespace DarjeelingGameJam.Spores
             IsDetached = true;
             _rigidbody.bodyType = RigidbodyType2D.Dynamic;
             _rigidbody.simulated = true;
+
+            // Lancer le délai avant de pouvoir germer
+            StartCoroutine(EnableGerminationAfterDelay());
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
+        private IEnumerator EnableGerminationAfterDelay()
         {
-            if (other.gameObject.CompareTag("Ground"))
+            _canGerminate = false;
+            yield return new WaitForSeconds(_germinationDelay);
+            _canGerminate = true;
+        }
+
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            if (other.CompareTag("Ground"))
             {
+                // Calculer le seuil Y la première fois qu'on entre dans le ground
+                if (!_germinationYCalculated)
+                {
+                    // Récupérer les bounds du ground collider
+                    Bounds groundBounds = other.bounds;
+                    float groundTop = groundBounds.max.y;    // Haut du ground
+                    float groundBottom = groundBounds.min.y; // Bas du ground
+
+                    // Calculer le Y absolu basé sur le ratio de pénétration
+                    // 0 = groundTop (surface), 1 = groundBottom (fond)
+                    _germinationYThreshold = Mathf.Lerp(groundTop, groundBottom, _germinationDepthRatio);
+                    _germinationYCalculated = true;
+                }
+
+                // Vérifier d'abord si le délai est écoulé
+                if (!_canGerminate)
+                    return;
+
                 // Vérifier si la spore est assez basse pour germer
                 if (transform.position.y <= _germinationYThreshold)
                 {
                     Germinate(transform.position);
                 }
-                // Sinon, ne rien faire - la spore continue de bouger jusqu'à être assez basse
+                // Sinon, ne rien faire - la spore continue de tomber jusqu'à être assez basse
             }
         }
 

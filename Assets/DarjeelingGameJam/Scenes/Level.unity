@@ -1461,6 +1461,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
+      propertyPath: _trailFadeSpeed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: _triggerSpawner
       value: 
       objectReference: {fileID: 0}
@@ -1558,11 +1562,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: '_trailSpeedThresholds.Array.data[1]'
-      value: 0.1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: '_trailSpeedThresholds.Array.data[2]'
-      value: 0.1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 5763844985671406288, guid: 0b1b1bae87a2647e0a2845cb293cf1be, type: 3}
       propertyPath: '_trailSpeedThresholds.Array.data[3]'

@@ -102,6 +102,13 @@ namespace DarjeelingGameJam.Wind
 
         [ShowIf(nameof(_enableMultiTrails))]
         [BoxGroup("Trails")]
+        [Tooltip("Vitesse du fade in/out des trails (plus petit = plus smooth)")]
+        [Range(0.01f, 1f)]
+        [SerializeField]
+        private float _trailFadeSpeed = 0.1f;
+
+        [ShowIf(nameof(_enableMultiTrails))]
+        [BoxGroup("Trails")]
         [Tooltip("Offset manuel pour chaque trail (en world units). Laisse vide pour générer aléatoirement.")]
         [SerializeField]
         private Vector3[] _trailManualOffsets = new Vector3[]
@@ -139,6 +146,8 @@ namespace DarjeelingGameJam.Wind
         // Multi-trails
         private TrailRenderer[] _trailInstances;
         private Vector3[] _trailOffsets;
+        private float[] _trailCurrentAlpha; // Alpha courant de chaque trail pour smooth fade
+        private Gradient[] _trailOriginalGradient; // Gradient original de chaque trail
 
         // Wind sound
         private float _lastWindSoundTime = -999f;
@@ -171,6 +180,19 @@ namespace DarjeelingGameJam.Wind
             _circleCollider.radius = _currentRadius;
             _currentForce = _minForce;
             _currentDirection = Vector2.zero;
+        }
+
+        private void OnDestroy()
+        {
+            // Nettoyer les trails quand l'objet est détruit
+            if (_trailInstances != null)
+            {
+                foreach (var trail in _trailInstances)
+                {
+                    if (trail != null)
+                        Destroy(trail.gameObject);
+                }
+            }
         }
 
         private async void Start()
@@ -425,6 +447,8 @@ namespace DarjeelingGameJam.Wind
 
             _trailInstances = new TrailRenderer[_trailPrefabs.Length];
             _trailOffsets = new Vector3[_trailPrefabs.Length];
+            _trailCurrentAlpha = new float[_trailPrefabs.Length];
+            _trailOriginalGradient = new Gradient[_trailPrefabs.Length];
 
             // Obtenir la position initiale de la souris
             Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
@@ -444,18 +468,34 @@ namespace DarjeelingGameJam.Wind
                     // Calculer l'offset avant d'instancier
                     CalculateTrailOffset(i);
 
-                    // Instancier le prefab comme enfant (hérite de la position du parent)
-                    GameObject trailObj = Instantiate(_trailPrefabs[i].gameObject, transform);
+                    // Instancier le prefab SANS parent (world space) pour qu'il puisse bouger indépendamment
+                    GameObject trailObj = Instantiate(_trailPrefabs[i].gameObject, mouseWorldPos + _trailOffsets[i], Quaternion.identity, null);
                     trailObj.name = $"Trail_{i}";
                     _trailInstances[i] = trailObj.GetComponent<TrailRenderer>();
 
-                    // Positionner en local space avec l'offset
-                    _trailInstances[i].transform.localPosition = _trailOffsets[i];
+                    // Copier le gradient original
+                    _trailOriginalGradient[i] = new Gradient();
+                    _trailOriginalGradient[i].SetKeys(
+                        _trailInstances[i].colorGradient.colorKeys,
+                        _trailInstances[i].colorGradient.alphaKeys
+                    );
 
-                    // Désactiver complètement le trail au début
-                    _trailInstances[i].emitting = false;
-                    _trailInstances[i].enabled = false;
-                    _trailInstances[i].Clear();
+                    // Initialiser l'alpha à 0 (invisible)
+                    _trailCurrentAlpha[i] = 0f;
+
+                    // Créer un gradient avec alpha = 0 pour rendre invisible au début
+                    Gradient invisibleGradient = new Gradient();
+                    GradientAlphaKey[] alphaKeys = new GradientAlphaKey[_trailOriginalGradient[i].alphaKeys.Length];
+                    for (int k = 0; k < alphaKeys.Length; k++)
+                    {
+                        alphaKeys[k] = new GradientAlphaKey(0f, _trailOriginalGradient[i].alphaKeys[k].time);
+                    }
+                    invisibleGradient.SetKeys(_trailOriginalGradient[i].colorKeys, alphaKeys);
+                    _trailInstances[i].colorGradient = invisibleGradient;
+
+                    // Activer le trail dès le début
+                    _trailInstances[i].emitting = true;
+                    _trailInstances[i].enabled = true;
                 }
             }
         }
@@ -487,27 +527,47 @@ namespace DarjeelingGameJam.Wind
         {
             if (_trailInstances == null || _trailInstances.Length == 0) return;
 
-            // Activer/désactiver chaque trail selon son seuil de vitesse
+            // Suivre la souris en world space avec un smooth follow
             for (int i = 0; i < _trailInstances.Length; i++)
             {
                 if (_trailInstances[i] != null)
                 {
-                    // Récupérer le seuil pour ce trail (si pas défini, utiliser un défaut)
+                    // Position cible = souris + offset
+                    Vector3 targetWorldPos = mouseWorldPos + _trailOffsets[i];
+
+                    // Lerp smooth vers la cible pour créer un mouvement fluide
+                    // Plus le lerp est petit, plus le trail "traîne" derrière
+                    float smoothSpeed = 0.3f; // Ajuste pour plus/moins de smooth
+                    _trailInstances[i].transform.position = Vector3.Lerp(
+                        _trailInstances[i].transform.position,
+                        targetWorldPos,
+                        smoothSpeed
+                    );
+
+                    // Contrôler l'opacité selon la vitesse et le threshold
                     float threshold = i < _trailSpeedThresholds.Length ? _trailSpeedThresholds[i] : (i * 0.2f);
+                    float targetAlpha = normalizedSpeed >= threshold ? 1f : 0f;
 
-                    // Activer si la vitesse dépasse le seuil
-                    bool shouldEmit = normalizedSpeed >= threshold;
+                    // Lerp smooth de l'alpha actuel vers l'alpha cible
+                    _trailCurrentAlpha[i] = Mathf.Lerp(_trailCurrentAlpha[i], targetAlpha, _trailFadeSpeed);
 
-                    // Réactiver le renderer si nécessaire
-                    if (shouldEmit && !_trailInstances[i].enabled)
+                    // Créer un nouveau gradient avec l'alpha modulé
+                    Gradient newGradient = new Gradient();
+                    GradientAlphaKey[] newAlphaKeys = new GradientAlphaKey[_trailOriginalGradient[i].alphaKeys.Length];
+                    for (int k = 0; k < newAlphaKeys.Length; k++)
                     {
-                        _trailInstances[i].enabled = true;
+                        // Multiplier l'alpha original par l'alpha courant
+                        float originalAlpha = _trailOriginalGradient[i].alphaKeys[k].alpha;
+                        newAlphaKeys[k] = new GradientAlphaKey(
+                            originalAlpha * _trailCurrentAlpha[i],
+                            _trailOriginalGradient[i].alphaKeys[k].time
+                        );
                     }
+                    newGradient.SetKeys(_trailOriginalGradient[i].colorKeys, newAlphaKeys);
+                    _trailInstances[i].colorGradient = newGradient;
 
-                    _trailInstances[i].emitting = shouldEmit;
-
-                    // IMPORTANT: utiliser localPosition car le parent a déjà été déplacé à mouseWorldPos
-                    _trailInstances[i].transform.localPosition = _trailOffsets[i];
+                    // Garder le trail toujours actif pour éviter les coupures
+                    _trailInstances[i].emitting = true;
                 }
             }
         }

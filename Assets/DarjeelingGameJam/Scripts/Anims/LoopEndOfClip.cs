@@ -286,7 +286,6 @@ public class LoopEndOfClip : MonoBehaviour, IWindAffectable
         if (_loopFramesCount <= 0)
         {
             FreezeOnLastFrame();
-            Debug.Log($"[LoopEndOfClip] {gameObject.name} - Freeze sur dernière frame (loopLastFrames={loopLastFrames}, _loopFramesCount={_loopFramesCount})");
             return;
         }
 

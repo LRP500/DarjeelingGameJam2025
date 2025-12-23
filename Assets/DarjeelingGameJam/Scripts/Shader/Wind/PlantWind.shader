@@ -26,6 +26,7 @@
         _RandomSeed ("Random Seed", Float) = 1.0
         _TintSeed ("Tint Seed", Float) = 1.0
 
+        [Toggle] _EnableChromaKey ("Enable Chroma Key", Float) = 1
         _KeyColor     ("Key Color", Color) = (1,1,1,1)
         _KeyTolerance ("Key Tolerance", Range(0,1)) = 0.1
         _KeyFeather   ("Key Feather", Range(0,1))   = 0.1
@@ -119,6 +120,7 @@
                 float  _RandomSeed;
                 float  _TintSeed;
 
+                float  _EnableChromaKey;
                 float4 _KeyColor;
                 float  _KeyTolerance;
                 float  _KeyFeather;
@@ -275,13 +277,16 @@
                 // Variation de teinte par objet
                 main.rgb = ApplyInstanceTint(main.rgb);
 
-                // Chroma key
-                float3 diff = main.rgb - _KeyColor.rgb;
-                float dist = length(diff);
-                float tol = _KeyTolerance;
-                float feather = max(_KeyFeather, 1e-5);
-                float aMask = saturate((dist - tol) / feather);
-                main.a *= aMask;
+                // Chroma key (optionnel)
+                if (_EnableChromaKey > 0.5)
+                {
+                    float3 diff = main.rgb - _KeyColor.rgb;
+                    float dist = length(diff);
+                    float tol = _KeyTolerance;
+                    float feather = max(_KeyFeather, 1e-5);
+                    float aMask = saturate((dist - tol) / feather);
+                    main.a *= aMask;
+                }
 
                 // Fade alpha en bas pour ancrage au sol
                 if (_BottomFadeHeight > 0.0001)
@@ -365,6 +370,7 @@
                 float  _RandomSeed;
                 float  _TintSeed;
 
+                float  _EnableChromaKey;
                 float4 _KeyColor;
                 float  _KeyTolerance;
                 float  _KeyFeather;
@@ -499,13 +505,16 @@
                 // Variation de teinte aussi dans ce pass
                 mainTex.rgb = ApplyInstanceTint(mainTex.rgb);
 
-                // Chroma key sur la map de base
-                float3 diff = mainTex.rgb - _KeyColor.rgb;
-                float dist = length(diff);
-                float tol = _KeyTolerance;
-                float feather = max(_KeyFeather, 1e-5);
-                float aMask = saturate((dist - tol) / feather);
-                mainTex.a *= aMask;
+                // Chroma key sur la map de base (optionnel)
+                if (_EnableChromaKey > 0.5)
+                {
+                    float3 diff = mainTex.rgb - _KeyColor.rgb;
+                    float dist = length(diff);
+                    float tol = _KeyTolerance;
+                    float feather = max(_KeyFeather, 1e-5);
+                    float aMask = saturate((dist - tol) / feather);
+                    mainTex.a *= aMask;
+                }
 
                 // Fade alpha en bas pour ancrage au sol
                 if (_BottomFadeHeight > 0.0001)
@@ -584,6 +593,7 @@
                 float  _RandomSeed;
                 float  _TintSeed;
 
+                float  _EnableChromaKey;
                 float4 _KeyColor;
                 float  _KeyTolerance;
                 float  _KeyFeather;
@@ -715,12 +725,16 @@
                 // Variation de teinte
                 mainTex.rgb = ApplyInstanceTint(mainTex.rgb);
 
-                float3 diff = mainTex.rgb - _KeyColor.rgb;
-                float dist  = length(diff);
-                float tol   = _KeyTolerance;
-                float feather = max(_KeyFeather, 1e-5);
-                float aMask = saturate((dist - tol) / feather);
-                mainTex.a *= aMask;
+                // Chroma key (optionnel)
+                if (_EnableChromaKey > 0.5)
+                {
+                    float3 diff = mainTex.rgb - _KeyColor.rgb;
+                    float dist  = length(diff);
+                    float tol   = _KeyTolerance;
+                    float feather = max(_KeyFeather, 1e-5);
+                    float aMask = saturate((dist - tol) / feather);
+                    mainTex.a *= aMask;
+                }
 
                 // Fade alpha en bas pour ancrage au sol
                 if (_BottomFadeHeight > 0.0001)

@@ -136,6 +136,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3250689100205710635}
     m_Modifications:
+    - target: {fileID: 965399190750062815, guid: 6975571e48dcc7e439f52b7ede217a0e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8b4cd42b6a7dab640956cd62e5f3c6b6, type: 2}
     - target: {fileID: 2181589681893084197, guid: 6975571e48dcc7e439f52b7ede217a0e, type: 3}
       propertyPath: m_Name
       value: Plant A Renderer

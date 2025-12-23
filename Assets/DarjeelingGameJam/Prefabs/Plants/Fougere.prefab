@@ -125,6 +125,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Plant
       objectReference: {fileID: 0}
+    - target: {fileID: 3606338721435688147, guid: b1c28ebf2a0dab84fa88e30454949574, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d63857decaa30634cbbf1ad327bd1e06, type: 2}
     - target: {fileID: 8278996114383155593, guid: b1c28ebf2a0dab84fa88e30454949574, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.162

@@ -14,7 +14,7 @@ Material:
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -59,13 +59,14 @@ Material:
     - _ColorWobbleScale: 0.2
     - _ColorWobbleSpeed: 0.1
     - _EdgeDarkening: 0.6
+    - _EnableChromaKey: 0
     - _EnableExternalAlpha: 0
     - _EnableWind: 0
     - _GustDuration: 1
     - _GustInterval: 1
     - _GustStrength: 1
-    - _KeyFeather: 0.78
-    - _KeyTolerance: 0.24
+    - _KeyFeather: 0
+    - _KeyTolerance: 0
     - _NoiseScale: 0.59
     - _PaperIntensity: 0.5
     - _PaperTiling: 5

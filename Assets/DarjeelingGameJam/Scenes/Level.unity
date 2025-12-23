@@ -1741,6 +1741,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lighting
       objectReference: {fileID: 0}
+    - target: {fileID: 3990416658696714896, guid: 14a74106353f548519112a770a1e5657, type: 3}
+      propertyPath: m_ShadowsEnabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6511847157485758063, guid: 14a74106353f548519112a770a1e5657, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1800,6 +1804,10 @@ PrefabInstance:
     - target: {fileID: 7113682226882658496, guid: 14a74106353f548519112a770a1e5657, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9037566896460293016, guid: 14a74106353f548519112a770a1e5657, type: 3}
+      propertyPath: m_ShadowsEnabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

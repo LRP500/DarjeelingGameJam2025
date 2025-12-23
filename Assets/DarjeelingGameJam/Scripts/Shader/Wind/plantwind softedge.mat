@@ -74,7 +74,7 @@ Material:
     - _PosterizeSteps: 6
     - _RandomSeed: 1
     - _TintSeed: 1
-    - _TintVariationAmount: 1.01
+    - _TintVariationAmount: 0.75
     - _WindNoiseScale: 1.3
     - _WindSpeed: 4.28
     - _WindStrength: 0.49

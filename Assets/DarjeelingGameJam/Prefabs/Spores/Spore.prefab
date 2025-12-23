@@ -137,10 +137,12 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   _emissionIntensity: 7
+  _colorSaturation: 0.6
   _minGravityScale: 0.05
   _maxGravityScale: 0.15
   _canSpawnPlant: 1
-  _germinationDepthRange: {x: 0.1, y: 0.9}
+  _germinationMaxY: -3
+  _germinationMinY: -9
   _germinationDelay: 1
 --- !u!212 &3523418667534530429
 SpriteRenderer:

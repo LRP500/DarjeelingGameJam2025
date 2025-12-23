@@ -49,9 +49,13 @@ namespace DarjeelingGameJam.Spores
         [SerializeField]
         private bool _canSpawnPlant = true;
 
-        [Tooltip("Profondeur de pénétration dans le ground (0 = surface, 1 = fond du ground)")]
+        [Tooltip("Hauteur Y maximale de germination (plus haut)")]
         [SerializeField]
-        private Vector2 _germinationDepthRange = new Vector2(0.1f, 0.9f);
+        private float _germinationMaxY = 0f;
+
+        [Tooltip("Hauteur Y minimale de germination (plus bas)")]
+        [SerializeField]
+        private float _germinationMinY = -5f;
 
         [Tooltip("Délai (en secondes) après détachement avant de pouvoir germer")]
         [MinValue(0f)]
@@ -67,10 +71,10 @@ namespace DarjeelingGameJam.Spores
         private Color _targetEmissionColor;
         private Color _targetAlbedoColor;
         private Vector3 _targetScale;
-        private float _germinationDepthRatio; // Ratio de pénétration (0-1)
-        private float _germinationYThreshold; // Y absolu calculé depuis le ground
-        private bool _germinationYCalculated = false;
+        private float _germinationYThreshold; // Y absolu de germination (tiré aléatoirement)
         private bool _canGerminate = false;
+        private float _germinationCheckTimer = 0f;
+        private const float GerminationCheckInterval = 0.2f; // Check toutes les 0.2 secondes
 
         public bool IsDetached { get; private set; }
 
@@ -104,8 +108,8 @@ namespace DarjeelingGameJam.Spores
             // Appliquer une gravité aléatoire dans la plage définie
             _rigidbody.gravityScale = UnityEngine.Random.Range(_minGravityScale, _maxGravityScale);
 
-            // Déterminer le ratio de pénétration aléatoire pour cette spore
-            _germinationDepthRatio = UnityEngine.Random.Range(_germinationDepthRange.x, _germinationDepthRange.y);
+            // Tirer aléatoirement la hauteur Y de germination entre min et max
+            _germinationYThreshold = UnityEngine.Random.Range(_germinationMinY, _germinationMaxY);
 
             // Sauvegarder les valeurs cibles avant de commencer l'animation
             if (_spriteRenderer != null)
@@ -210,34 +214,19 @@ namespace DarjeelingGameJam.Spores
             _canGerminate = true;
         }
 
-        private void OnTriggerStay2D(Collider2D other)
+        private void Update()
         {
-            if (other.CompareTag("Ground"))
+            // Ne vérifier la germination que toutes les 0.2 secondes (pas besoin de précision)
+            _germinationCheckTimer += Time.deltaTime;
+            if (_germinationCheckTimer >= GerminationCheckInterval)
             {
-                // Calculer le seuil Y la première fois qu'on entre dans le ground
-                if (!_germinationYCalculated)
-                {
-                    // Récupérer les bounds du ground collider
-                    Bounds groundBounds = other.bounds;
-                    float groundTop = groundBounds.max.y;    // Haut du ground
-                    float groundBottom = groundBounds.min.y; // Bas du ground
+                _germinationCheckTimer = 0f;
 
-                    // Calculer le Y absolu basé sur le ratio de pénétration
-                    // 0 = groundTop (surface), 1 = groundBottom (fond)
-                    _germinationYThreshold = Mathf.Lerp(groundTop, groundBottom, _germinationDepthRatio);
-                    _germinationYCalculated = true;
-                }
-
-                // Vérifier d'abord si le délai est écoulé
-                if (!_canGerminate)
-                    return;
-
-                // Vérifier si la spore est assez basse pour germer
-                if (transform.position.y <= _germinationYThreshold)
+                // Vérifier si la spore a atteint la hauteur de germination
+                if (_canGerminate && transform.position.y <= _germinationYThreshold)
                 {
                     Germinate(transform.position);
                 }
-                // Sinon, ne rien faire - la spore continue de tomber jusqu'à être assez basse
             }
         }
 

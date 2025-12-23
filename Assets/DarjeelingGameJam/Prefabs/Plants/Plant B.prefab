@@ -50,6 +50,9 @@ MonoBehaviour:
   _scaleMinMax: {x: 0.4, y: 1}
   _maxRotationY: 20
   _useFlipY: 0
+  _exceptionalChance: 0.1
+  _exceptionalScaleMinMax: {x: 0.4, y: 1.4}
+  _exceptionalTintVariation: 1.416
 --- !u!114 &2201940028156407969
 MonoBehaviour:
   m_ObjectHideFlags: 0

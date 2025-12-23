@@ -16,11 +16,13 @@ public class PlantMaterialProperties : MonoBehaviour
     private static readonly int RandomSeedID = Shader.PropertyToID("_RandomSeed");
     private static readonly int TintSeedID = Shader.PropertyToID("_TintSeed");
     private static readonly int EnableWindID = Shader.PropertyToID("_EnableWind");
+    private static readonly int TintVariationAmountID = Shader.PropertyToID("_TintVariationAmount");
 
     // Valeurs actuelles (pour que les autres scripts puissent les lire si besoin)
     private float _randomSeed = 0f;
     private float _tintSeed = 0f;
     private float _enableWind = 0f;
+    private float _tintVariationAmount = -1f; // -1 = utiliser la valeur du matériau
 
     private bool _isDirty = false;
 
@@ -76,6 +78,19 @@ public class PlantMaterialProperties : MonoBehaviour
     }
 
     /// <summary>
+    /// Définit l'intensité de variation de teinte (_TintVariationAmount)
+    /// Pour les plantes exceptionnelles
+    /// </summary>
+    public void SetTintVariationAmount(float value)
+    {
+        if (Mathf.Approximately(_tintVariationAmount, value))
+            return;
+
+        _tintVariationAmount = value;
+        _isDirty = true;
+    }
+
+    /// <summary>
     /// Applique toutes les propriétés au MaterialPropertyBlock
     /// Appelé automatiquement, mais peut être forcé si besoin
     /// </summary>
@@ -88,6 +103,12 @@ public class PlantMaterialProperties : MonoBehaviour
         _propertyBlock.SetFloat(RandomSeedID, _randomSeed);
         _propertyBlock.SetFloat(TintSeedID, _tintSeed);
         _propertyBlock.SetFloat(EnableWindID, _enableWind);
+
+        // Appliquer la variation de teinte seulement si définie (plantes exceptionnelles)
+        if (_tintVariationAmount >= 0f)
+        {
+            _propertyBlock.SetFloat(TintVariationAmountID, _tintVariationAmount);
+        }
 
         // Appliquer au renderer
         _spriteRenderer.SetPropertyBlock(_propertyBlock);
@@ -108,4 +129,5 @@ public class PlantMaterialProperties : MonoBehaviour
     public float RandomSeed => _randomSeed;
     public float TintSeed => _tintSeed;
     public float EnableWind => _enableWind;
+    public float TintVariationAmount => _tintVariationAmount;
 }

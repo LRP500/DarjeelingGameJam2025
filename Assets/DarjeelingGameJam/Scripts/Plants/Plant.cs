@@ -16,9 +16,30 @@ namespace DarjeelingGameJam.Plants
         [SerializeField]
         private bool _useFlipY = false;
 
+        [Header("Variations Exceptionnelles (rares)")]
+        [Range(0f, 1f)]
+        [Tooltip("Probabilité d'avoir une plante exceptionnelle (0 = jamais, 0.1 = 10%)")]
+        [SerializeField]
+        private float _exceptionalChance = 0.1f;
+
+        [Vector2AsRange]
+        [Tooltip("Range de taille pour les plantes exceptionnelles")]
+        [SerializeField]
+        private Vector2 _exceptionalScaleMinMax = new(0.4f, 2.5f);
+
+        [Range(0f, 1.5f)]
+        [Tooltip("Variation de teinte pour les plantes exceptionnelles (1.0 = couleurs folles)")]
+        [SerializeField]
+        private float _exceptionalTintVariation = 1.0f;
+
         private void Awake()
         {
-            var scale = Random.Range(_scaleMinMax.x, _scaleMinMax.y);
+            // Tirer au sort : plante normale ou exceptionnelle ?
+            bool isExceptional = Random.value < _exceptionalChance;
+
+            // Choisir la taille : normale (tes valeurs) ou exceptionnelle
+            Vector2 scaleRange = isExceptional ? _exceptionalScaleMinMax : _scaleMinMax;
+            float scale = Random.Range(scaleRange.x, scaleRange.y);
             transform.localScale = new Vector3(scale, scale, 0);
 
             // Flip aléatoire (X ou Y selon le paramètre)
@@ -45,6 +66,12 @@ namespace DarjeelingGameJam.Plants
             {
                 plantMaterialProperties.SetRandomSeed(Random.Range(0f, 1000f));  // Pour le vent
                 plantMaterialProperties.SetTintSeed(Random.Range(0f, 1000f));    // Pour la teinte
+
+                // Si exceptionnelle, appliquer une variation de teinte plus intense
+                if (isExceptional)
+                {
+                    plantMaterialProperties.SetTintVariationAmount(_exceptionalTintVariation);
+                }
             }
         }
     }

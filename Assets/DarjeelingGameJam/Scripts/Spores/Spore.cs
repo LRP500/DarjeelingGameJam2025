@@ -28,6 +28,11 @@ namespace DarjeelingGameJam.Spores
         [SerializeField]
         private float _emissionIntensity = 4f;
 
+        [Tooltip("Réduction de la saturation des couleurs (0 = gris, 1 = couleur normale)")]
+        [Range(0f, 1f)]
+        [SerializeField]
+        private float _colorSaturation = 0.6f;
+
         [Header("Physics Settings")]
         [Tooltip("Gravité minimale de la spore")]
         [MinValue(0f)]
@@ -74,6 +79,20 @@ namespace DarjeelingGameJam.Spores
             _canSpawnPlant = canSpawnPlant;
         }
 
+        private Color DesaturateColor(Color color, float saturation)
+        {
+            // Convertir en grayscale
+            float gray = color.r * 0.299f + color.g * 0.587f + color.b * 0.114f;
+
+            // Interpoler entre grayscale et couleur originale
+            return new Color(
+                Mathf.Lerp(gray, color.r, saturation),
+                Mathf.Lerp(gray, color.g, saturation),
+                Mathf.Lerp(gray, color.b, saturation),
+                color.a
+            );
+        }
+
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
@@ -94,8 +113,8 @@ namespace DarjeelingGameJam.Spores
                 _propertyBlock = new MaterialPropertyBlock();
                 _spriteRenderer.GetPropertyBlock(_propertyBlock);
 
-                // Calculer les couleurs cibles
-                _targetColor = _spriteRenderer.color;
+                // Calculer les couleurs cibles avec désaturation
+                _targetColor = DesaturateColor(_spriteRenderer.color, _colorSaturation);
                 _targetEmissionColor = _targetColor * _emissionIntensity;
                 _targetAlbedoColor = new Color(_targetColor.r, _targetColor.g, _targetColor.b, 0.5f); // 50% d'opacité pour l'albedo
 

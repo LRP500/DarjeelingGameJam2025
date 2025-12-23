@@ -12,7 +12,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _ENABLECHROMAKEY_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -59,15 +60,15 @@ Material:
     - _ColorWobbleScale: 0.2
     - _ColorWobbleSpeed: 0.1
     - _EdgeDarkening: 0.6
-    - _EnableChromaKey: 0
+    - _EnableChromaKey: 1
     - _EnableExternalAlpha: 0
     - _EnableWind: 0
     - _EnvBlendStrength: 0.45
     - _GustDuration: 1
     - _GustInterval: 1
     - _GustStrength: 1
-    - _KeyFeather: 0.47
-    - _KeyTolerance: 1
+    - _KeyFeather: 0.15
+    - _KeyTolerance: 0.199
     - _NoiseScale: 0.59
     - _OverlayStrength: 0
     - _PaperIntensity: 0.5

@@ -16,7 +16,7 @@ namespace DarjeelingGameJam.Parallax
 
         private void Start()
         {
-            _previousCameraPosition = _camera.transform.localPosition;
+            _previousCameraPosition = _camera.transform.position;
         }
         
         private void LateUpdate()

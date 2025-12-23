@@ -241,6 +241,15 @@ namespace DarjeelingGameJam.Wind
             }
         }
 
+        private void FixedUpdate()
+        {
+            if (!_initialized || !_continuousForce)
+                return;
+
+            // Apply physics forces in FixedUpdate for frame-rate independence
+            ApplyWindForces();
+        }
+
         #region Wind Physics
 
         private void UpdateFollowerMode(Vector3 mouseWorldPos, Vector2 direction, float velocityNormalized)
@@ -258,53 +267,53 @@ namespace DarjeelingGameJam.Wind
             _currentForce = Mathf.Lerp(_minForce, _maxForce, forceCurveValue);
             _currentDirection = direction;
 
-            // Apply continuous force
-            if (_continuousForce && _initialized)
+        }
+
+        private void ApplyWindForces()
+        {
+            foreach (var spore in _sporesInTrigger)
             {
-                foreach (var spore in _sporesInTrigger)
+                if (spore == null || !spore.IsDetached) continue;
+
+                Rigidbody2D rb = spore.GetComponent<Rigidbody2D>();
+                if (rb != null)
                 {
-                    if (spore == null || !spore.IsDetached) continue;
+                    Vector2 forceDirection;
 
-                    Rigidbody2D rb = spore.GetComponent<Rigidbody2D>();
-                    if (rb != null)
+                    // Si la souris bouge, utiliser la direction du mouvement
+                    if (_currentDirection.magnitude > 0.01f)
                     {
-                        Vector2 forceDirection;
-
-                        // Si la souris bouge, utiliser la direction du mouvement
-                        if (_currentDirection.magnitude > 0.01f)
-                        {
-                            forceDirection = _currentDirection;
-                        }
-                        else
-                        {
-                            // Si immobile, repousser vers l'extérieur (depuis le centre du trigger vers la spore)
-                            Vector2 toSpore = (spore.transform.position - transform.position);
-                            forceDirection = toSpore.normalized;
-                        }
-
-                        // Ajouter un biais vertical vers le haut, modulé par la position verticale
-                        // Plus on est haut à l'écran, moins le bias est fort
-                        float sporeScreenY = _camera.WorldToViewportPoint(spore.transform.position).y;
-                        float upwardBiasMultiplier = Mathf.Clamp01(1f - sporeScreenY); // 1 en bas, 0 en haut
-                        forceDirection.y += _upwardBias * upwardBiasMultiplier;
-                        forceDirection.Normalize();
-
-                        // Ajouter une variation angulaire aléatoire pour disperser les spores
-                        if (_maxDirectionalVariation > 0f)
-                        {
-                            float randomAngle = Random.Range(-_maxDirectionalVariation, _maxDirectionalVariation);
-                            float angleRad = randomAngle * Mathf.Deg2Rad;
-                            float cos = Mathf.Cos(angleRad);
-                            float sin = Mathf.Sin(angleRad);
-                            forceDirection = new Vector2(
-                                forceDirection.x * cos - forceDirection.y * sin,
-                                forceDirection.x * sin + forceDirection.y * cos
-                            );
-                        }
-
-                        Vector2 force = forceDirection * _currentForce * _continuousForceMultiplier;
-                        rb.AddForce(force, ForceMode2D.Force);
+                        forceDirection = _currentDirection;
                     }
+                    else
+                    {
+                        // Si immobile, repousser vers l'extérieur (depuis le centre du trigger vers la spore)
+                        Vector2 toSpore = (spore.transform.position - transform.position);
+                        forceDirection = toSpore.normalized;
+                    }
+
+                    // Ajouter un biais vertical vers le haut, modulé par la position verticale
+                    // Plus on est haut à l'écran, moins le bias est fort
+                    float sporeScreenY = _camera.WorldToViewportPoint(spore.transform.position).y;
+                    float upwardBiasMultiplier = Mathf.Clamp01(1f - sporeScreenY); // 1 en bas, 0 en haut
+                    forceDirection.y += _upwardBias * upwardBiasMultiplier;
+                    forceDirection.Normalize();
+
+                    // Ajouter une variation angulaire aléatoire pour disperser les spores
+                    if (_maxDirectionalVariation > 0f)
+                    {
+                        float randomAngle = Random.Range(-_maxDirectionalVariation, _maxDirectionalVariation);
+                        float angleRad = randomAngle * Mathf.Deg2Rad;
+                        float cos = Mathf.Cos(angleRad);
+                        float sin = Mathf.Sin(angleRad);
+                        forceDirection = new Vector2(
+                            forceDirection.x * cos - forceDirection.y * sin,
+                            forceDirection.x * sin + forceDirection.y * cos
+                        );
+                    }
+
+                    Vector2 force = forceDirection * _currentForce * _continuousForceMultiplier;
+                    rb.AddForce(force, ForceMode2D.Force);
                 }
             }
         }
@@ -390,6 +399,9 @@ namespace DarjeelingGameJam.Wind
 
             _plantsInTrigger.Add(loopEndOfClip);
             loopEndOfClip.windActive = true;
+
+            // Réactiver le component pour qu'il traite le changement de vent
+            loopEndOfClip.enabled = true;
         }
 
         private async void DeactivatePlantWindAfterDelay(LoopEndOfClip loopEndOfClip)
@@ -404,6 +416,9 @@ namespace DarjeelingGameJam.Wind
             if (loopEndOfClip != null && !_plantsInTrigger.Contains(loopEndOfClip))
             {
                 loopEndOfClip.windActive = false;
+
+                // Réactiver le component pour qu'il puisse faire le fade out du vent
+                loopEndOfClip.enabled = true;
             }
         }
 

@@ -30,6 +30,10 @@ namespace DarjeelingGameJam.Spores
         private float _gravityVariation = 0.02f;
 
         [Header("Germination Settings")]
+        [Tooltip("Est-ce que cette spore peut faire germer une plante ?")]
+        [SerializeField]
+        private bool _canSpawnPlant = true;
+
         [Tooltip("Profondeur de pénétration dans le ground (0 = surface, 1 = fond du ground)")]
         [SerializeField]
         private Vector2 _germinationDepthRange = new Vector2(0.1f, 0.9f);
@@ -54,6 +58,11 @@ namespace DarjeelingGameJam.Spores
         private bool _canGerminate = false;
 
         public bool IsDetached { get; private set; }
+
+        public void SetCanSpawnPlant(bool canSpawnPlant)
+        {
+            _canSpawnPlant = canSpawnPlant;
+        }
 
         private void Awake()
         {
@@ -207,7 +216,13 @@ namespace DarjeelingGameJam.Spores
 
         private void Germinate(Vector2 position)
         {
-            Instantiate(_plant, position, Quaternion.identity);
+            // Faire apparaître la plante seulement si la spore peut germer
+            if (_canSpawnPlant && _plant != null)
+            {
+                Instantiate(_plant, position, Quaternion.identity);
+            }
+
+            // La spore se détruit dans tous les cas (avec ou sans germination)
             Destroy(gameObject);
         }
     }

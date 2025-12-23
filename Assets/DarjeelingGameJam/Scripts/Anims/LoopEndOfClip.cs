@@ -14,7 +14,7 @@ public class LoopEndOfClip : MonoBehaviour
     public int windFrameStep = 2;
 
     [Tooltip("Vitesse de transition du vent (ON/OFF)")]
-    public float windBlendSpeed = 5f;
+    public float windBlendSpeed = 1.5f;
 
     private Animator _animator;
     private AnimationClip _clip;
@@ -42,6 +42,8 @@ public class LoopEndOfClip : MonoBehaviour
 
     // Valeur blendée envoyée au shader (0..1)
     private float _enableWindCurrent = 0f;
+    private float _lastAppliedWindValue = -1f; // Pour éviter les appels redondants au shader
+    private bool _wasWindActive = false; // Pour détecter les changements de windActive
 
     private void Awake()
     {
@@ -99,24 +101,46 @@ public class LoopEndOfClip : MonoBehaviour
         }
 
         _enableWindCurrent = windActive ? 1f : 0f;
+        _lastAppliedWindValue = _enableWindCurrent;
+        _wasWindActive = windActive;
         ApplyWindToMaterial();
     }
 
     private void Update()
     {
-        // --- Pilotage du vent / shader : toujours actif, même sans Animator / Clip ---
+        // --- Optimisation 1 : Ne calculer le lerp QUE si nécessaire ---
+        bool windStateChanged = windActive != _wasWindActive;
         float target = windActive ? 1f : 0f;
-        _enableWindCurrent = Mathf.MoveTowards(
-            _enableWindCurrent,
-            target,
-            windBlendSpeed * Time.deltaTime
-        );
+        bool needsWindUpdate = windStateChanged || Mathf.Abs(_enableWindCurrent - target) > 0.001f;
 
-        ApplyWindToMaterial();
+        if (needsWindUpdate)
+        {
+            _enableWindCurrent = Mathf.MoveTowards(
+                _enableWindCurrent,
+                target,
+                windBlendSpeed * Time.deltaTime
+            );
+
+            // --- Optimisation 2 : N'appeler le shader QUE si la valeur a vraiment changé ---
+            if (Mathf.Abs(_enableWindCurrent - _lastAppliedWindValue) > 0.001f)
+            {
+                ApplyWindToMaterial();
+                _lastAppliedWindValue = _enableWindCurrent;
+            }
+
+            _wasWindActive = windActive;
+        }
         // ---------------------------------------------------------------------------
 
         if (_animator == null || _clip == null)
+        {
+            // --- Optimisation 3 : Désactiver le component si au repos complet ---
+            if (!needsWindUpdate && _growthFinished)
+            {
+                enabled = false;
+            }
             return;
+        }
 
         // Si tu changes loopLastFrames en Play → on recalcule la loop
         if (loopLastFrames != _previousLoopLastFrames)
@@ -146,8 +170,17 @@ public class LoopEndOfClip : MonoBehaviour
         else
         {
             // Pas de vent : pas de loop → figer sur la dernière frame
-            _inLoopPhase = false;
-            FreezeOnLastFrame();
+            if (_inLoopPhase)
+            {
+                _inLoopPhase = false;
+                FreezeOnLastFrame();
+            }
+
+            // --- Optimisation 3 : Désactiver le component si complètement au repos ---
+            if (!needsWindUpdate)
+            {
+                enabled = false;
+            }
         }
     }
 

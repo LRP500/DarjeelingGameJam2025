@@ -136,6 +136,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _gravityVariation: 0.05
+  _germinationDepthRange: {x: 0.1, y: 0.9}
+  _germinationDelay: 1
 --- !u!212 &3523418667534530429
 SpriteRenderer:
   m_ObjectHideFlags: 0

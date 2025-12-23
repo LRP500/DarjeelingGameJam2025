@@ -130,7 +130,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6012668577611274098}
   - component: {fileID: 7530793968620362733}
-  - component: {fileID: 1909929092116473868}
+  - component: {fileID: 4751571434838830207}
   m_Layer: 14
   m_Name: herbe (7)
   m_TagString: Plant
@@ -211,8 +211,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &1909929092116473868
-BoxCollider2D:
+--- !u!58 &4751571434838830207
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -245,18 +245,8 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 14.72, y: 4.07}
-    newSize: {x: 61.9563, y: 10.799999}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 14.72, y: 4.07}
-  m_EdgeRadius: 0
+  m_Offset: {x: 0, y: -1.9840473}
+  m_Radius: 2.7
 --- !u!1001 &148627584119981181
 PrefabInstance:
   m_ObjectHideFlags: 0

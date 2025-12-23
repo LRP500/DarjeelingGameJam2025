@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 454957055816531104}
   - component: {fileID: 1742554194558197932}
   - component: {fileID: 4359161876978619634}
-  - component: {fileID: 8440463617757562296}
   - component: {fileID: 1469605252792662625}
   m_Layer: 0
   m_Name: Plant 1 Renderer
@@ -148,7 +147,7 @@ MonoBehaviour:
   onEndGrow:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8440463617757562296}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UnityEngine.PolygonCollider2D, UnityEngine
         m_MethodName: set_isTrigger
         m_Mode: 6
@@ -160,66 +159,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!60 &8440463617757562296
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000285417382156032}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 6, y: 6}
-    newSize: {x: 6, y: 6}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -1.5614061, y: 1.7565782}
-      - {x: -2.2392757, y: 1.8635793}
-      - {x: -2.2294214, y: 1.2867296}
-      - {x: -2.4154558, y: 1.1507871}
-      - {x: -2.2636592, y: 0.9592345}
-      - {x: -1.7636945, y: 0.91575885}
-      - {x: -1.8514915, y: -2.8487234}
-      - {x: -1.7035096, y: -2.8524342}
-      - {x: -1.6503091, y: 0.82873154}
-      - {x: -1.2825474, y: 0.8698404}
-      - {x: -1.302821, y: 1.0451672}
-      - {x: -1.1033416, y: 1.1563118}
-      - {x: -1.1456307, y: 1.6453161}
-  m_UseDelaunayMesh: 0
 --- !u!114 &1469605252792662625
 MonoBehaviour:
   m_ObjectHideFlags: 0

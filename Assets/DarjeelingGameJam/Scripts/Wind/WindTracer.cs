@@ -1,5 +1,5 @@
+using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using DarjeelingGameJam.Spores;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -197,16 +197,21 @@ namespace DarjeelingGameJam.Wind
             }
         }
 
-        private async void Start()
+        private void Start()
+        {
+            StartCoroutine(InitializeCoroutine());
+        }
+
+        private IEnumerator InitializeCoroutine()
         {
             // Attendre un court délai pour que tout soit bien initialisé
-            await Task.Delay(100);
+            yield return new WaitForSeconds(0.1f);
 
             if (_enableMultiTrails)
                 InitializeTrailPool();
 
             // Attendre 2 secondes avant d'activer le système
-            await Task.Delay(2000);
+            yield return new WaitForSeconds(2f);
 
             _initialized = true;
             _circleCollider.enabled = true;
@@ -345,7 +350,7 @@ namespace DarjeelingGameJam.Wind
                 {
                     _plantsInTrigger.Remove(loopEndOfClip);
                     // Désactiver le vent après un délai
-                    DeactivatePlantWindAfterDelay(loopEndOfClip);
+                    StartCoroutine(DeactivatePlantWindAfterDelay(loopEndOfClip));
                 }
             }
         }
@@ -404,13 +409,13 @@ namespace DarjeelingGameJam.Wind
             loopEndOfClip.enabled = true;
         }
 
-        private async void DeactivatePlantWindAfterDelay(LoopEndOfClip loopEndOfClip)
+        private IEnumerator DeactivatePlantWindAfterDelay(LoopEndOfClip loopEndOfClip)
         {
             if (loopEndOfClip == null)
-                return;
+                yield break;
 
             // Attendre la durée configurée
-            await Task.Delay(System.TimeSpan.FromSeconds(_plantWindDuration));
+            yield return new WaitForSeconds(_plantWindDuration);
 
             // Désactiver seulement si la plante n'est pas revenue dans le trigger entre-temps
             if (loopEndOfClip != null && !_plantsInTrigger.Contains(loopEndOfClip))

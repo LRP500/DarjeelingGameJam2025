@@ -24,13 +24,14 @@
         _BendByHeight ("Bend By Height (0-2)", Float) = 1.0
         _WindTimeScale ("Wind Time Scale", Float) = 1.0
         _RandomSeed ("Random Seed", Float) = 1.0
+        _TintSeed ("Tint Seed", Float) = 1.0
 
         _KeyColor     ("Key Color", Color) = (1,1,1,1)
         _KeyTolerance ("Key Tolerance", Range(0,1)) = 0.1
         _KeyFeather   ("Key Feather", Range(0,1))   = 0.1
 
         // --- Variation de teinte par objet ---
-        _TintVariationAmount ("Tint Variation Amount", Range(0,0.5)) = 0.5
+        _TintVariationAmount ("Tint Variation Amount", Range(0,1.5)) = 0.5
 
         // --- Fade alpha en bas pour ancrage au sol ---
         _BottomFadeHeight ("Bottom Fade Height", Range(0,1)) = 0.35
@@ -116,6 +117,7 @@
                 float  _BendByHeight;
                 float  _WindTimeScale;
                 float  _RandomSeed;
+                float  _TintSeed;
 
                 float4 _KeyColor;
                 float  _KeyTolerance;
@@ -196,8 +198,8 @@
                 if (v <= 0.0001)
                     return rgb;
 
-                float randHue = Hash11(_RandomSeed * 7.77);   // direction de teinte 0..1
-                float randAmp = Hash11(_RandomSeed * 13.37);  // amplitude locale 0..1
+                float randHue = Hash11(_TintSeed * 7.77);   // direction de teinte 0..1
+                float randAmp = Hash11(_TintSeed * 13.37);  // amplitude locale 0..1
                 float localAmount = v * randAmp;              // 0.._TintVariationAmount (ex 0..0.5)
 
                 float maxHueShift = 3.14159;                  // ±180° quand localAmount = 1
@@ -361,6 +363,7 @@
                 float  _BendByHeight;
                 float  _WindTimeScale;
                 float  _RandomSeed;
+                float  _TintSeed;
 
                 float4 _KeyColor;
                 float  _KeyTolerance;
@@ -421,8 +424,8 @@
                 if (v <= 0.0001)
                     return rgb;
 
-                float randHue = Hash11(_RandomSeed * 7.77);
-                float randAmp = Hash11(_RandomSeed * 13.37);
+                float randHue = Hash11(_TintSeed * 7.77);
+                float randAmp = Hash11(_TintSeed * 13.37);
                 float localAmount = v * randAmp;
 
                 float maxHueShift = 3.14159;
@@ -579,6 +582,7 @@
                 float  _BendByHeight;
                 float  _WindTimeScale;
                 float  _RandomSeed;
+                float  _TintSeed;
 
                 float4 _KeyColor;
                 float  _KeyTolerance;
@@ -639,8 +643,8 @@
                 if (v <= 0.0001)
                     return rgb;
 
-                float randHue = Hash11(_RandomSeed * 7.77);
-                float randAmp = Hash11(_RandomSeed * 13.37);
+                float randHue = Hash11(_TintSeed * 7.77);
+                float randAmp = Hash11(_TintSeed * 13.37);
                 float localAmount = v * randAmp;
 
                 float maxHueShift = 3.14159;

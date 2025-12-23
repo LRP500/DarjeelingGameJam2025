@@ -13,6 +13,10 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 599769630432046686, guid: b97d107a8c4ee43ada69719e7ac02dac, type: 3}
+      propertyPath: _scaleMinMax.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 599769630432046686, guid: b97d107a8c4ee43ada69719e7ac02dac, type: 3}
       propertyPath: _scaleMinMax.y
       value: 1
       objectReference: {fileID: 0}

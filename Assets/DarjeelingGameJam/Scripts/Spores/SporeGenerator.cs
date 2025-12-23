@@ -15,15 +15,15 @@ namespace DarjeelingGameJam.Spores
         [SerializeField]
         private float _interval;
 
-        [Range(1, 5)]
+        [Range(1, 10)]
         [SerializeField]
         [Tooltip("Nombre minimum de spores à générer")]
         private int _minSporeCount = 1;
 
-        [Range(1, 5)]
+        [Range(1, 10)]
         [SerializeField]
         [Tooltip("Nombre maximum de spores à générer")]
-        private int _maxSporeCount = 5;
+        private int _maxSporeCount = 10;
 
         [MinValue(0)]
         [SerializeField]
@@ -50,13 +50,18 @@ namespace DarjeelingGameJam.Spores
             // Tirer aléatoirement le nombre de spores à générer
             _actualSporeCount = Random.Range(_minSporeCount, _maxSporeCount + 1);
 
-            // Pré-déterminer quelles spores seront germinantes
+            // Pré-déterminer quelles spores seront germinantes (max 5)
             _germinationStatus = new bool[_actualSporeCount];
             int germinatingCount = 0;
+            const int maxGerminatingSpores = 5;
 
             // Tirer au sort pour chaque spore individuellement
             for (int i = 0; i < _actualSporeCount; i++)
             {
+                // Ne plus ajouter de spores germinantes si on a atteint le max de 5
+                if (germinatingCount >= maxGerminatingSpores)
+                    break;
+
                 if (Random.value < _germinationChancePerSpore)
                 {
                     _germinationStatus[i] = true;

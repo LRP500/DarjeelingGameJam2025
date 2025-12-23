@@ -287,7 +287,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.143279}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -297,7 +297,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 1.2865579}
   m_EdgeRadius: 0
 --- !u!1 &427063579
 GameObject:
@@ -1127,7 +1127,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2421718812287256672, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -6.2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5046648391143838102, guid: efca013d950e04dca8a4669c6fda844b, type: 3}
       propertyPath: m_Name
@@ -1545,6 +1545,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 477696616657159679, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
+      propertyPath: Lens.OrthographicSize
+      value: 10.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 477696616657159679, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
       propertyPath: Target.TrackingTarget
       value: 
       objectReference: {fileID: 1880052589}
@@ -1558,7 +1562,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1372361236466173499, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.01746301
+      value: -0.019574124
       objectReference: {fileID: 0}
     - target: {fileID: 1557084832992087068, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
       propertyPath: m_EventMask.m_Bits
@@ -1568,13 +1572,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: CameraRig
       objectReference: {fileID: 0}
+    - target: {fileID: 5193368577651724153, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
+      propertyPath: orthographic size
+      value: 10.57
+      objectReference: {fileID: 0}
     - target: {fileID: 6032902135250988955, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.000006198883
       objectReference: {fileID: 0}
     - target: {fileID: 6032902135250988955, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.01746301
+      value: -0.33275524
       objectReference: {fileID: 0}
     - target: {fileID: 6793375735335338304, guid: 25ffa61f7937f494d9d641194855be29, type: 3}
       propertyPath: m_Enabled

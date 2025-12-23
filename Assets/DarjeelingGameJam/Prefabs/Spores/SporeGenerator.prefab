@@ -46,6 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Spores.SporeGenerator
   _spore: {fileID: 1277615276391774044, guid: 3ce908bf8ec534f92b9d1288bf77497b, type: 3}
   _interval: 5
-  _maxCount: 1
+  _minSporeCount: 1
+  _maxSporeCount: 10
   _spawnRadius: 1
   _simulateOnSpawn: 0
+  _germinationChancePerSpore: 0.2

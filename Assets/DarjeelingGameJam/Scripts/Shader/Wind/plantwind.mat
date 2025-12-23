@@ -52,6 +52,7 @@ Material:
     - _BendIntensity: 1
     - _BlurAmount: 0
     - _BlurMaxRadius: 3.8
+    - _BottomFadeCurve: 3
     - _BottomFadeHeight: 0.3
     - _BottomFadeStrength: 1
     - _ColorWobbleAmount: 0.41
@@ -70,7 +71,8 @@ Material:
     - _PaperTiling: 5
     - _PosterizeSteps: 16
     - _RandomSeed: 1
-    - _TintVariationAmount: 0.5
+    - _TintSeed: 1
+    - _TintVariationAmount: 1.03
     - _WindNoiseScale: 1.3
     - _WindSpeed: 4.28
     - _WindStrength: 0.49

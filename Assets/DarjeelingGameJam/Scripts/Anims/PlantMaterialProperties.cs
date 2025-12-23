@@ -14,10 +14,12 @@ public class PlantMaterialProperties : MonoBehaviour
 
     // Cache des property IDs pour performance
     private static readonly int RandomSeedID = Shader.PropertyToID("_RandomSeed");
+    private static readonly int TintSeedID = Shader.PropertyToID("_TintSeed");
     private static readonly int EnableWindID = Shader.PropertyToID("_EnableWind");
 
     // Valeurs actuelles (pour que les autres scripts puissent les lire si besoin)
     private float _randomSeed = 0f;
+    private float _tintSeed = 0f;
     private float _enableWind = 0f;
 
     private bool _isDirty = false;
@@ -49,6 +51,18 @@ public class PlantMaterialProperties : MonoBehaviour
     }
 
     /// <summary>
+    /// Définit la seed aléatoire pour la variation de teinte (_TintSeed)
+    /// </summary>
+    public void SetTintSeed(float value)
+    {
+        if (Mathf.Approximately(_tintSeed, value))
+            return;
+
+        _tintSeed = value;
+        _isDirty = true;
+    }
+
+    /// <summary>
     /// Définit l'activation du vent dans le shader (_EnableWind)
     /// Valeur entre 0 (pas de vent) et 1 (vent max)
     /// </summary>
@@ -72,6 +86,7 @@ public class PlantMaterialProperties : MonoBehaviour
 
         // Définir toutes les propriétés dans le property block
         _propertyBlock.SetFloat(RandomSeedID, _randomSeed);
+        _propertyBlock.SetFloat(TintSeedID, _tintSeed);
         _propertyBlock.SetFloat(EnableWindID, _enableWind);
 
         // Appliquer au renderer
@@ -91,5 +106,6 @@ public class PlantMaterialProperties : MonoBehaviour
 
     // Getters pour lecture (si besoin)
     public float RandomSeed => _randomSeed;
+    public float TintSeed => _tintSeed;
     public float EnableWind => _enableWind;
 }

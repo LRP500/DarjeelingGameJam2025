@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DarjeelingGameJam.Plants.Plant
   _scaleMinMax: {x: 0.4, y: 1}
   _maxRotationY: 20
-  _useFlipY: 1
+  _useFlipY: 0
 --- !u!114 &6409281426906858504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,19 +166,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8769445961866995125, guid: b56cd83ff29b5da4ca015492934a9c08, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8069702
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8769445961866995125, guid: b56cd83ff29b5da4ca015492934a9c08, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8769445961866995125, guid: b56cd83ff29b5da4ca015492934a9c08, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8769445961866995125, guid: b56cd83ff29b5da4ca015492934a9c08, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.59059227
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8769445961866995125, guid: b56cd83ff29b5da4ca015492934a9c08, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -190,7 +190,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8769445961866995125, guid: b56cd83ff29b5da4ca015492934a9c08, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 72.398
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

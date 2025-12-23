@@ -23,6 +23,11 @@ namespace DarjeelingGameJam.Spores
         [SerializeField]
         private AnimationCurve _spawnCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
+        [Tooltip("Intensité de l'émission lumineuse (4 = défaut, 8+ = très lumineux)")]
+        [MinValue(0f)]
+        [SerializeField]
+        private float _emissionIntensity = 4f;
+
         [Header("Physics Settings")]
         [Tooltip("Gravité minimale de la spore")]
         [MinValue(0f)]
@@ -91,7 +96,7 @@ namespace DarjeelingGameJam.Spores
 
                 // Calculer les couleurs cibles
                 _targetColor = _spriteRenderer.color;
-                _targetEmissionColor = _targetColor * 4f; // Intensité de 4 pour l'émission
+                _targetEmissionColor = _targetColor * _emissionIntensity;
                 _targetAlbedoColor = new Color(_targetColor.r, _targetColor.g, _targetColor.b, 0.5f); // 50% d'opacité pour l'albedo
 
                 // Commencer avec des valeurs à zéro pour l'animation

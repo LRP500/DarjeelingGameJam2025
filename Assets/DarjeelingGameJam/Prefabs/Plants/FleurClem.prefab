@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 599769630432046686, guid: b97d107a8c4ee43ada69719e7ac02dac, type: 3}
       propertyPath: _scaleMinMax.y
-      value: 1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 599769630432046686, guid: b97d107a8c4ee43ada69719e7ac02dac, type: 3}
       propertyPath: _exceptionalScaleMinMax.y
@@ -190,7 +190,7 @@ PrefabInstance:
     - target: {fileID: 3013878696898559473, guid: e6d6aa2e3abc95146b9674240ef7d1f8, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: d63857decaa30634cbbf1ad327bd1e06, type: 2}
+      objectReference: {fileID: 2100000, guid: f54f9d3a718781d478bd1a918dc1b5ee, type: 2}
     - target: {fileID: 5886186003994416442, guid: e6d6aa2e3abc95146b9674240ef7d1f8, type: 3}
       propertyPath: m_Name
       value: Fleurclem

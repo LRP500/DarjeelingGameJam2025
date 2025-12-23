@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using DarjeelingGameJam.Wind;
 
-public class LoopEndOfClip : MonoBehaviour
+public class LoopEndOfClip : MonoBehaviour, IWindAffectable
 {
     [Header("Loop de fin")]
     [Tooltip("Nombre de frames de fin à boucler (0 = figer sur la dernière frame)")]
@@ -104,6 +105,12 @@ public class LoopEndOfClip : MonoBehaviour
         _lastAppliedWindValue = _enableWindCurrent;
         _wasWindActive = windActive;
         ApplyWindToMaterial();
+
+        // Enregistrer la plante dans la grille spatiale pour la détection du vent
+        if (PlantSpatialGrid.Instance != null)
+        {
+            PlantSpatialGrid.Instance.RegisterPlant(transform, this);
+        }
     }
 
     private void Update()
@@ -279,6 +286,7 @@ public class LoopEndOfClip : MonoBehaviour
         if (_loopFramesCount <= 0)
         {
             FreezeOnLastFrame();
+            Debug.Log($"[LoopEndOfClip] {gameObject.name} - Freeze sur dernière frame (loopLastFrames={loopLastFrames}, _loopFramesCount={_loopFramesCount})");
             return;
         }
 
@@ -309,4 +317,23 @@ public class LoopEndOfClip : MonoBehaviour
         _animator.Play(0, 0, normalized);
         _animator.Update(0f);
     }
+
+    #region IWindAffectable Implementation
+
+    /// <summary>
+    /// Implémentation de l'interface IWindAffectable pour la Spatial Grid.
+    /// Appelé par le WindTracer quand la plante entre/sort du rayon du vent.
+    /// </summary>
+    public void SetWind(bool enabled, float strength01)
+    {
+        windActive = enabled;
+
+        // Réactiver le component pour qu'il traite le changement de vent
+        this.enabled = true;
+
+        // Note: strength01 pourrait être utilisé pour moduler windBlendSpeed ou autre
+        // mais pour l'instant on garde la logique simple: ON ou OFF
+    }
+
+    #endregion
 }

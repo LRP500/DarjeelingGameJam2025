@@ -61,7 +61,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8b4cd42b6a7dab640956cd62e5f3c6b6, type: 2}
+  - {fileID: 2100000, guid: f54f9d3a718781d478bd1a918dc1b5ee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 176790b136f8cf442b936233b929c0ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoopEndOfClip
-  loopLastFrames: 5
+  loopLastFrames: 0
   windActive: 0
   windFrameStep: 2
   windBlendSpeed: 5

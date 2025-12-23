@@ -72,6 +72,25 @@ namespace DarjeelingGameJam.Wind
         [SerializeField]
         private float _plantWindDuration = 1f;
 
+        [Tooltip("Fréquence de scan des plantes (en secondes). 0.15s = ~7 fois/sec")]
+        [MinValue(0.05f)]
+        [SerializeField]
+        private float _plantScanInterval = 0.15f;
+
+        [Tooltip("Rayon d'entrée du vent pour les plantes (utilise le trigger radius actuel)")]
+        [MinValue(0.1f)]
+        [SerializeField]
+        private float _plantEnterRadius = 3f;
+
+        [Tooltip("Rayon de sortie du vent (légèrement plus grand pour éviter le flicker)")]
+        [MinValue(0.1f)]
+        [SerializeField]
+        private float _plantExitRadius = 3.3f;
+
+        [Tooltip("Activer le falloff de force selon la distance")]
+        [SerializeField]
+        private bool _useFalloff = true;
+
         [Header("Wind Sound Settings")]
         [Tooltip("Vitesse normalisée minimum (0-1) pour jouer le son de vent")]
         [Range(0f, 1f)]
@@ -139,9 +158,15 @@ namespace DarjeelingGameJam.Wind
         private float _currentRadius;
         private bool _initialized = false;
 
-        // Spores and plants tracking
+        // Spores tracking (continue d'utiliser Physics2D)
         private HashSet<Spore> _sporesInTrigger = new HashSet<Spore>();
-        private HashSet<LoopEndOfClip> _plantsInTrigger = new HashSet<LoopEndOfClip>();
+
+        // Plant tracking (utilise la Spatial Grid au lieu de Physics2D)
+        private readonly HashSet<int> _plantsInsideWind = new HashSet<int>(256);
+        private readonly List<int> _plantCandidates = new List<int>(512);
+        private readonly List<int> _plantsToRemove = new List<int>(256);
+        private float _plantEnterSqr;
+        private float _plantExitSqr;
 
         // Multi-trails
         private TrailRenderer[] _trailInstances;
@@ -182,6 +207,12 @@ namespace DarjeelingGameJam.Wind
             _circleCollider.radius = _currentRadius;
             _currentForce = _minForce;
             _currentDirection = Vector2.zero;
+
+            // Initialiser les rayons carrés pour le scan des plantes (évite sqrt)
+            if (_plantExitRadius < _plantEnterRadius)
+                _plantExitRadius = _plantEnterRadius * 1.1f;
+            _plantEnterSqr = _plantEnterRadius * _plantEnterRadius;
+            _plantExitSqr = _plantExitRadius * _plantExitRadius;
         }
 
         private void OnDestroy()
@@ -215,6 +246,9 @@ namespace DarjeelingGameJam.Wind
 
             _initialized = true;
             _circleCollider.enabled = true;
+
+            // Démarrer le scan périodique des plantes via la Spatial Grid
+            StartCoroutine(PlantScanLoop());
         }
 
         private void Update()
@@ -325,33 +359,21 @@ namespace DarjeelingGameJam.Wind
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            // Ne gère plus que les spores (les plantes utilisent la Spatial Grid)
             if (other.CompareTag("Spore"))
             {
                 HandleSporeEnter(other);
-            }
-            else if (other.CompareTag("Plant"))
-            {
-                HandlePlantEnter(other);
             }
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
+            // Ne gère plus que les spores (les plantes utilisent la Spatial Grid)
             if (other.CompareTag("Spore"))
             {
                 var spore = other.GetComponent<Spore>();
                 if (spore != null)
                     _sporesInTrigger.Remove(spore);
-            }
-            else if (other.CompareTag("Plant"))
-            {
-                var loopEndOfClip = other.GetComponentInParent<LoopEndOfClip>();
-                if (loopEndOfClip != null)
-                {
-                    _plantsInTrigger.Remove(loopEndOfClip);
-                    // Désactiver le vent après un délai
-                    StartCoroutine(DeactivatePlantWindAfterDelay(loopEndOfClip));
-                }
             }
         }
 
@@ -396,34 +418,106 @@ namespace DarjeelingGameJam.Wind
             }
         }
 
-        private void HandlePlantEnter(Collider2D other)
+        /// <summary>
+        /// Scan périodique des plantes via la Spatial Grid.
+        /// Remplace OnTriggerEnter/Exit pour les plantes (beaucoup plus optimisé).
+        /// </summary>
+        private IEnumerator PlantScanLoop()
         {
-            var loopEndOfClip = other.GetComponentInParent<LoopEndOfClip>();
-            if (loopEndOfClip == null)
-                return;
+            var wait = new WaitForSeconds(_plantScanInterval);
 
-            _plantsInTrigger.Add(loopEndOfClip);
-            loopEndOfClip.windActive = true;
+            while (enabled)
+            {
+                if (PlantSpatialGrid.Instance != null)
+                {
+                    ScanPlantsInRadius();
+                }
 
-            // Réactiver le component pour qu'il traite le changement de vent
-            loopEndOfClip.enabled = true;
+                yield return wait;
+            }
         }
 
-        private IEnumerator DeactivatePlantWindAfterDelay(LoopEndOfClip loopEndOfClip)
+        /// <summary>
+        /// Scan les plantes dans le rayon du vent et met à jour leur état.
+        /// </summary>
+        private void ScanPlantsInRadius()
         {
-            if (loopEndOfClip == null)
-                yield break;
+            var grid = PlantSpatialGrid.Instance;
+            Vector2 center = transform.position;
 
+            // 1) Query la grille pour obtenir les candidates dans les cellules autour
+            grid.Query(center, _plantEnterRadius, _plantCandidates);
+
+            // 2) Filtrage fin : Enter/Stay (vérifier distance exacte avec sqrMagnitude)
+            for (int i = 0; i < _plantCandidates.Count; i++)
+            {
+                int plantId = _plantCandidates[i];
+                Vector2 plantPos = grid.GetPlantPosition(plantId);
+                Vector2 delta = plantPos - center;
+                float distSqr = delta.sqrMagnitude;
+
+                // Si dans le rayon d'entrée, activer le vent
+                if (distSqr <= _plantEnterSqr)
+                {
+                    // Ajouter à la liste des plantes actives
+                    _plantsInsideWind.Add(plantId);
+
+                    // Calculer la force (falloff optionnel)
+                    float strength = 1f;
+                    if (_useFalloff && _plantEnterSqr > 0f)
+                    {
+                        strength = 1f - Mathf.Clamp01(distSqr / _plantEnterSqr);
+                    }
+
+                    // Activer le vent sur la plante
+                    var windComponent = grid.GetPlantWindComponent(plantId);
+                    windComponent?.SetWind(true, strength);
+                }
+            }
+
+            // 3) Exit (hystérésis) : vérifier les plantes qui étaient inside et sont maintenant outside
+            _plantsToRemove.Clear();
+            foreach (var plantId in _plantsInsideWind)
+            {
+                Vector2 plantPos = grid.GetPlantPosition(plantId);
+                Vector2 delta = plantPos - center;
+                float distSqr = delta.sqrMagnitude;
+
+                // Si sorti du rayon de sortie (hystérésis)
+                if (distSqr > _plantExitSqr)
+                {
+                    _plantsToRemove.Add(plantId);
+                }
+            }
+
+            // Retirer les plantes sorties et désactiver leur vent après un délai
+            for (int i = 0; i < _plantsToRemove.Count; i++)
+            {
+                int plantId = _plantsToRemove[i];
+                _plantsInsideWind.Remove(plantId);
+
+                // Désactiver le vent après un délai (anti-flicker)
+                StartCoroutine(DeactivatePlantWindAfterDelay(plantId));
+            }
+        }
+
+        /// <summary>
+        /// Désactive le vent sur une plante après un délai (évite le clignotement).
+        /// </summary>
+        private IEnumerator DeactivatePlantWindAfterDelay(int plantId)
+        {
             // Attendre la durée configurée
             yield return new WaitForSeconds(_plantWindDuration);
 
             // Désactiver seulement si la plante n'est pas revenue dans le trigger entre-temps
-            if (loopEndOfClip != null && !_plantsInTrigger.Contains(loopEndOfClip))
+            if (!_plantsInsideWind.Contains(plantId))
             {
-                loopEndOfClip.windActive = false;
-
-                // Réactiver le component pour qu'il puisse faire le fade out du vent
-                loopEndOfClip.enabled = true;
+                var grid = PlantSpatialGrid.Instance;
+                if (grid != null)
+                {
+                    var windComponent = grid.GetPlantWindComponent(plantId);
+                    windComponent?.SetWind(false, 0f);
+                }
             }
         }
 
@@ -635,7 +729,8 @@ namespace DarjeelingGameJam.Wind
                 string stats = $"Radius: {_currentRadius:F2}\n" +
                               $"Force: {_currentForce:F2}\n" +
                               $"Trails: {activeTrails}/{(_trailInstances != null ? _trailInstances.Length : 0)}\n" +
-                              $"Spores: {_sporesInTrigger.Count}";
+                              $"Spores: {_sporesInTrigger.Count}\n" +
+                              $"Plants: {_plantsInsideWind.Count}";
 
                 UnityEditor.Handles.Label(transform.position + Vector3.up * (_currentRadius + 0.5f), stats, style);
             }

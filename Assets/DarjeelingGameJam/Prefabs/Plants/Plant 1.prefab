@@ -147,6 +147,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 14
       objectReference: {fileID: 0}
+    - target: {fileID: 1742554194558197932, guid: 309e045d56e6f0d4aab1886f9556471c, type: 3}
+      propertyPath: windActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742554194558197932, guid: 309e045d56e6f0d4aab1886f9556471c, type: 3}
+      propertyPath: loopLastFrames
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742554194558197932, guid: 309e045d56e6f0d4aab1886f9556471c, type: 3}
+      propertyPath: windBlendSpeed
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2710212783712994217, guid: 309e045d56e6f0d4aab1886f9556471c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.77

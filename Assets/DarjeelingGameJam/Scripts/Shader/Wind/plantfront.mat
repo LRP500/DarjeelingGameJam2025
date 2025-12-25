@@ -67,8 +67,8 @@ Material:
     - _GustDuration: 1
     - _GustInterval: 1
     - _GustStrength: 1
-    - _KeyFeather: 0.15
-    - _KeyTolerance: 0.199
+    - _KeyFeather: 0.26
+    - _KeyTolerance: 1
     - _NoiseScale: 0.59
     - _OverlayStrength: 0
     - _PaperIntensity: 0.5

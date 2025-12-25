@@ -46,7 +46,7 @@ namespace DarjeelingGameJam.Spores
 
         [Tooltip("Nombre de plantes où atteindre le minimum de génération")]
         [SerializeField]
-        private int _plantCountThresholdMax = 1000;
+        private int _plantCountThresholdMax = 1800;
 
         [Range(0f, 1f)]
         [Tooltip("Multiplicateur minimum pour le nombre de spores (0.5 = 50% des spores au max)")]
@@ -72,13 +72,9 @@ namespace DarjeelingGameJam.Spores
             float sporeMultiplier = CalculateSporeMultiplier(plantCount);
             float germinationMultiplier = CalculateGerminationMultiplier(plantCount);
 
-            Debug.Log($"[SporeGenerator] PlantCount={plantCount}, SporeMulti={sporeMultiplier:F2}, GermMulti={germinationMultiplier:F2}, Base={_minSporeCount}-{_maxSporeCount}");
-
             // Appliquer le scaling au nombre de spores (garde tes valeurs de base au début)
             int scaledMinCount = Mathf.Max(1, Mathf.RoundToInt(_minSporeCount * sporeMultiplier));
             int scaledMaxCount = Mathf.Max(1, Mathf.RoundToInt(_maxSporeCount * sporeMultiplier));
-
-            Debug.Log($"[SporeGenerator] Scaled counts: {scaledMinCount}-{scaledMaxCount}");
 
             // Tirer aléatoirement le nombre de spores à générer (ajusté)
             _actualSporeCount = Random.Range(scaledMinCount, scaledMaxCount + 1);
@@ -105,8 +101,8 @@ namespace DarjeelingGameJam.Spores
                 }
             }
 
-            // Garantir qu'au moins 1 spore sera germinante EN DESSOUS de 1000 plantes
-            // AU-DELÀ de 1000 plantes, il peut y avoir 0 spore germinante (ralentit la croissance)
+            // Garantir qu'au moins 1 spore sera germinante EN DESSOUS de 1800 plantes
+            // AU-DELÀ de 1800 plantes, il peut y avoir 0 spore germinante (ralentit la croissance)
             if (germinatingCount == 0 && plantCount < _plantCountThresholdMax)
             {
                 int randomIndex = Random.Range(0, _actualSporeCount);
@@ -137,17 +133,17 @@ namespace DarjeelingGameJam.Spores
 
         /// <summary>
         /// Calcule le multiplicateur de germination selon le nombre de plantes.
-        /// La germination reste à 100% jusqu'à plantCountThresholdMax (1000), puis descend après.
+        /// La germination reste à 100% jusqu'à plantCountThresholdMax (1800), puis descend après.
         /// </summary>
         private float CalculateGerminationMultiplier(int plantCount)
         {
-            // Pas de réduction de germination en dessous de 1000 plantes
+            // Pas de réduction de germination en dessous de 1800 plantes
             if (plantCount < _plantCountThresholdMax)
                 return 1f; // 100% de ta valeur de base
 
-            // Au-delà de 1000 plantes, commence à réduire
+            // Au-delà de 1800 plantes, commence à réduire
             // On peut continuer à descendre jusqu'à un certain seuil
-            int germinationMaxThreshold = _plantCountThresholdMax + 500; // 1500 plantes
+            int germinationMaxThreshold = _plantCountThresholdMax + 500; // 2300 plantes
 
             if (plantCount >= germinationMaxThreshold)
                 return _minGerminationMultiplier; // Minimum (ex: 30%)

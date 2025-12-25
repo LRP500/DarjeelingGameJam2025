@@ -23,15 +23,10 @@ namespace DarjeelingGameJam.Spores
         [SerializeField]
         private AnimationCurve _spawnCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-        [Tooltip("Intensité de l'émission lumineuse (4 = défaut, 8+ = très lumineux)")]
-        [MinValue(0f)]
+        [Header("Material Variants (pour GPU Instancing)")]
+        [Tooltip("Matériaux pré-configurés avec différentes couleurs/émissions. Un sera choisi aléatoirement.")]
         [SerializeField]
-        private float _emissionIntensity = 4f;
-
-        [Tooltip("Réduction de la saturation des couleurs (0 = gris, 1 = couleur normale)")]
-        [Range(0f, 1f)]
-        [SerializeField]
-        private float _colorSaturation = 0.6f;
+        private Material[] _materialVariants;
 
         [Header("Physics Settings")]
         [Tooltip("Gravité minimale de la spore")]
@@ -64,12 +59,7 @@ namespace DarjeelingGameJam.Spores
 
         private Rigidbody2D _rigidbody;
         private SpriteRenderer _spriteRenderer;
-        private MaterialPropertyBlock _propertyBlock;
-        private static readonly int EmissionColorID = Shader.PropertyToID("_EmissionColor");
-        private static readonly int ColorID = Shader.PropertyToID("_Color");
         private Color _targetColor;
-        private Color _targetEmissionColor;
-        private Color _targetAlbedoColor;
         private Vector3 _targetScale;
         private float _germinationYThreshold; // Y absolu de germination (tiré aléatoirement)
         private bool _canGerminate = false;
@@ -81,20 +71,6 @@ namespace DarjeelingGameJam.Spores
         public void SetCanSpawnPlant(bool canSpawnPlant)
         {
             _canSpawnPlant = canSpawnPlant;
-        }
-
-        private Color DesaturateColor(Color color, float saturation)
-        {
-            // Convertir en grayscale
-            float gray = color.r * 0.299f + color.g * 0.587f + color.b * 0.114f;
-
-            // Interpoler entre grayscale et couleur originale
-            return new Color(
-                Mathf.Lerp(gray, color.r, saturation),
-                Mathf.Lerp(gray, color.g, saturation),
-                Mathf.Lerp(gray, color.b, saturation),
-                color.a
-            );
         }
 
         private void Awake()
@@ -111,22 +87,21 @@ namespace DarjeelingGameJam.Spores
             // Tirer aléatoirement la hauteur Y de germination entre min et max
             _germinationYThreshold = UnityEngine.Random.Range(_germinationMinY, _germinationMaxY);
 
-            // Sauvegarder les valeurs cibles avant de commencer l'animation
-            if (_spriteRenderer != null)
+            // Choisir un matériau aléatoire pour la variété (permet le GPU Instancing)
+            if (_spriteRenderer != null && _materialVariants != null && _materialVariants.Length > 0)
             {
-                _propertyBlock = new MaterialPropertyBlock();
-                _spriteRenderer.GetPropertyBlock(_propertyBlock);
+                int randomIndex = UnityEngine.Random.Range(0, _materialVariants.Length);
+                _spriteRenderer.material = _materialVariants[randomIndex];
 
-                // Calculer les couleurs cibles avec désaturation
-                _targetColor = DesaturateColor(_spriteRenderer.color, _colorSaturation);
-                _targetEmissionColor = _targetColor * _emissionIntensity;
-                _targetAlbedoColor = new Color(_targetColor.r, _targetColor.g, _targetColor.b, 0.5f); // 50% d'opacité pour l'albedo
-
-                // Commencer avec des valeurs à zéro pour l'animation
+                // Sauvegarder la couleur cible et commencer transparent pour l'animation
+                _targetColor = _spriteRenderer.color;
                 _spriteRenderer.color = new Color(_targetColor.r, _targetColor.g, _targetColor.b, 0f);
-                _propertyBlock.SetColor(EmissionColorID, Color.black);
-                _propertyBlock.SetColor(ColorID, new Color(_targetAlbedoColor.r, _targetAlbedoColor.g, _targetAlbedoColor.b, 0f));
-                _spriteRenderer.SetPropertyBlock(_propertyBlock);
+            }
+            else if (_spriteRenderer != null)
+            {
+                // Fallback: utiliser le matériau par défaut
+                _targetColor = _spriteRenderer.color;
+                _spriteRenderer.color = new Color(_targetColor.r, _targetColor.g, _targetColor.b, 0f);
             }
 
             // Sauvegarder le scale cible et commencer à 0
@@ -153,26 +128,15 @@ namespace DarjeelingGameJam.Spores
                 // Animer le scale
                 transform.localScale = _targetScale * curveValue;
 
-                // Animer le fade sur le sprite renderer et les couleurs du material
+                // Animer le fade sur le sprite renderer
                 if (_spriteRenderer != null)
                 {
-                    // Fade de la couleur du sprite
                     _spriteRenderer.color = new Color(
                         _targetColor.r,
                         _targetColor.g,
                         _targetColor.b,
                         _targetColor.a * curveValue
                     );
-
-                    // Fade de l'émission et de l'albedo
-                    _propertyBlock.SetColor(EmissionColorID, _targetEmissionColor * curveValue);
-                    _propertyBlock.SetColor(ColorID, new Color(
-                        _targetAlbedoColor.r,
-                        _targetAlbedoColor.g,
-                        _targetAlbedoColor.b,
-                        _targetAlbedoColor.a * curveValue
-                    ));
-                    _spriteRenderer.SetPropertyBlock(_propertyBlock);
                 }
 
                 yield return null;
@@ -183,9 +147,6 @@ namespace DarjeelingGameJam.Spores
             if (_spriteRenderer != null)
             {
                 _spriteRenderer.color = _targetColor;
-                _propertyBlock.SetColor(EmissionColorID, _targetEmissionColor);
-                _propertyBlock.SetColor(ColorID, _targetAlbedoColor);
-                _spriteRenderer.SetPropertyBlock(_propertyBlock);
             }
         }
 

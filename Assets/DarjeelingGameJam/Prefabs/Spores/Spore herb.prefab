@@ -136,8 +136,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _emissionIntensity: 7
-  _colorSaturation: 0.6
+  _materialVariants: []
   _minGravityScale: 0.1
   _maxGravityScale: 0.25
   _canSpawnPlant: 1
@@ -169,7 +168,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e2273601b6f13284cb3b61c7029a32cb, type: 2}
+  - {fileID: 2100000, guid: eaf8e054b86f1d841b16149247c6b236, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

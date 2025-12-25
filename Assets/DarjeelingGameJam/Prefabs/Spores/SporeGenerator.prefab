@@ -51,3 +51,7 @@ MonoBehaviour:
   _spawnRadius: 1
   _simulateOnSpawn: 0
   _germinationChancePerSpore: 0.2
+  _plantCountThresholdStart: 300
+  _plantCountThresholdMax: 1000
+  _minSporeMultiplier: 0.2
+  _minGerminationMultiplier: 0.3

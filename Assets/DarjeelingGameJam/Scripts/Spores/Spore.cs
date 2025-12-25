@@ -63,7 +63,6 @@ namespace DarjeelingGameJam.Spores
         private Vector3 _targetScale;
         private float _germinationYThreshold; // Y absolu de germination (tiré aléatoirement)
         private bool _canGerminate = false;
-        private float _germinationCheckTimer = 0f;
         private const float GerminationCheckInterval = 0.2f; // Check toutes les 0.2 secondes
 
         public bool IsDetached { get; private set; }
@@ -173,21 +172,30 @@ namespace DarjeelingGameJam.Spores
             _canGerminate = false;
             yield return new WaitForSeconds(_germinationDelay);
             _canGerminate = true;
+
+            // Démarrer le check pour TOUTES les spores (germinantes ou non)
+            // Toutes doivent se détruire en touchant le sol, seules les germinantes font spawn une plante
+            StartCoroutine(GerminationCheckLoop());
         }
 
-        private void Update()
+        /// <summary>
+        /// Coroutine qui check la position Y toutes les 0.2s (au lieu d'Update() chaque frame).
+        /// Toutes les spores se détruisent en touchant le sol, mais seules les germinantes font spawn une plante.
+        /// </summary>
+        private IEnumerator GerminationCheckLoop()
         {
-            // Ne vérifier la germination que toutes les 0.2 secondes (pas besoin de précision)
-            _germinationCheckTimer += Time.deltaTime;
-            if (_germinationCheckTimer >= GerminationCheckInterval)
-            {
-                _germinationCheckTimer = 0f;
+            var wait = new WaitForSeconds(GerminationCheckInterval);
 
+            while (_canGerminate)
+            {
                 // Vérifier si la spore a atteint la hauteur de germination
-                if (_canGerminate && transform.position.y <= _germinationYThreshold)
+                if (transform.position.y <= _germinationYThreshold)
                 {
                     Germinate(transform.position);
+                    yield break; // Arrêter la coroutine après germination
                 }
+
+                yield return wait;
             }
         }
 

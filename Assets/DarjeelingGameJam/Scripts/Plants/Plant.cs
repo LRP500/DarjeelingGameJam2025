@@ -32,6 +32,16 @@ namespace DarjeelingGameJam.Plants
         [SerializeField]
         private float _exceptionalTintVariation = 1.0f;
 
+        private void OnEnable()
+        {
+            PlantCounter.Increment();
+        }
+
+        private void OnDisable()
+        {
+            PlantCounter.Decrement();
+        }
+
         private void Awake()
         {
             // Tirer au sort : plante normale ou exceptionnelle ?
